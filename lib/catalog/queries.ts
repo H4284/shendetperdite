@@ -65,6 +65,33 @@ function parseVariant(id: string, data: DocumentData): Variant {
   return variantSchema.parse({ id, ...data });
 }
 
+function isIndexError(error: unknown) {
+  const err = error as { code?: number | string; message?: string; details?: string };
+  const text = `${err.message ?? ""} ${err.details ?? ""}`;
+  return (
+    err.code === 9 ||
+    err.code === "failed-precondition" ||
+    text.includes("requires an index")
+  );
+}
+
+async function fetchActiveProducts(): Promise<Product[]> {
+  const snapshot = await db()
+    .collection("products")
+    .where("status", "==", "active")
+    .get();
+
+  return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+}
+
+function sortProducts(items: Product[], sort: ProductSort) {
+  return [...items].sort((a, b) => {
+    if (sort === "price-asc") return a.minPrice - b.minPrice;
+    if (sort === "price-desc") return b.minPrice - a.minPrice;
+    return b.createdAt.getTime() - a.createdAt.getTime();
+  });
+}
+
 export async function fetchCategoryTree(): Promise<CategoryTreeNode[]> {
   const snapshot = await db()
     .collection("categories")
@@ -101,12 +128,13 @@ export async function fetchCategoryBySlug(
   const snapshot = await db()
     .collection("categories")
     .where("slug", "==", slug)
-    .where("isActive", "==", true)
     .limit(1)
     .get();
 
   const doc = snapshot.docs[0];
-  return doc ? parseCategory(doc.id, doc.data()) : null;
+  if (!doc) return null;
+  const category = parseCategory(doc.id, doc.data());
+  return category.isActive ? category : null;
 }
 
 export async function fetchBrands(): Promise<Brand[]> {
@@ -124,12 +152,13 @@ export async function fetchBrandBySlug(slug: string): Promise<Brand | null> {
   const snapshot = await db()
     .collection("brands")
     .where("slug", "==", slug)
-    .where("isActive", "==", true)
     .limit(1)
     .get();
 
   const doc = snapshot.docs[0];
-  return doc ? parseBrand(doc.id, doc.data()) : null;
+  if (!doc) return null;
+  const brand = parseBrand(doc.id, doc.data());
+  return brand.isActive ? brand : null;
 }
 
 export async function fetchProductBySlug(
@@ -138,12 +167,12 @@ export async function fetchProductBySlug(
   const snapshot = await db()
     .collection("products")
     .where("slug", "==", slug)
-    .where("status", "==", "active")
     .limit(1)
     .get();
 
   const doc = snapshot.docs[0];
   if (!doc) return null;
+  if (doc.data().status !== "active") return null;
 
   const variantsSnap = await doc.ref.collection("variants").get();
   const variants = variantsSnap.docs
@@ -159,14 +188,27 @@ function sortField(sort: ProductSort): { field: string; direction: OrderByDirect
   return { field: "createdAt", direction: "desc" };
 }
 
-export async function fetchProducts(
-  input: ListProductsInput = {},
-): Promise<ListProductsResult> {
-  const page = Math.max(1, input.page ?? 1);
-  const pageSize = Math.min(48, Math.max(1, input.pageSize ?? DEFAULT_PAGE_SIZE));
-  const sort = input.sort ?? "newest";
-  const { field, direction } = sortField(sort);
+function paginateProducts(
+  items: Product[],
+  page: number,
+  pageSize: number,
+): ListProductsResult {
+  const start = (page - 1) * pageSize;
+  return {
+    items: items.slice(start, start + pageSize),
+    page,
+    pageSize,
+    total: items.length,
+  };
+}
 
+async function fetchProductsIndexed(
+  input: ListProductsInput,
+  page: number,
+  pageSize: number,
+  sort: ProductSort,
+): Promise<ListProductsResult> {
+  const { field, direction } = sortField(sort);
   let query: Query = db()
     .collection("products")
     .where("status", "==", "active");
@@ -192,18 +234,57 @@ export async function fetchProducts(
   };
 }
 
+async function fetchProductsInMemory(
+  input: ListProductsInput,
+  page: number,
+  pageSize: number,
+  sort: ProductSort,
+): Promise<ListProductsResult> {
+  let items = await fetchActiveProducts();
+  if (input.categoryId) {
+    items = items.filter((product) => product.categoryIds.includes(input.categoryId!));
+  }
+  if (input.brandId) {
+    items = items.filter((product) => product.brandId === input.brandId);
+  }
+
+  return paginateProducts(sortProducts(items, sort), page, pageSize);
+}
+
+export async function fetchProducts(
+  input: ListProductsInput = {},
+): Promise<ListProductsResult> {
+  const page = Math.max(1, input.page ?? 1);
+  const pageSize = Math.min(48, Math.max(1, input.pageSize ?? DEFAULT_PAGE_SIZE));
+  const sort = input.sort ?? "newest";
+
+  try {
+    return await fetchProductsIndexed(input, page, pageSize, sort);
+  } catch (error) {
+    if (!isIndexError(error)) throw error;
+    return fetchProductsInMemory(input, page, pageSize, sort);
+  }
+}
+
 export async function fetchSearchProducts(q: string): Promise<Product[]> {
   const token = tokenizeSearchQuery(q);
   if (!token) return [];
 
-  const snapshot = await db()
-    .collection("products")
-    .where("status", "==", "active")
-    .where("searchTokens", "array-contains", token)
-    .limit(24)
-    .get();
+  try {
+    const snapshot = await db()
+      .collection("products")
+      .where("status", "==", "active")
+      .where("searchTokens", "array-contains", token)
+      .limit(24)
+      .get();
 
-  return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+    return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+  } catch (error) {
+    if (!isIndexError(error)) throw error;
+    return (await fetchActiveProducts())
+      .filter((product) => product.searchTokens.includes(token))
+      .slice(0, 24);
+  }
 }
 
 export async function fetchRelatedProducts(product: Product): Promise<Product[]> {
@@ -221,44 +302,70 @@ export async function fetchRelatedProducts(product: Product): Promise<Product[]>
 }
 
 export async function fetchBestSellers(): Promise<Product[]> {
-  const snapshot = await db()
-    .collection("products")
-    .where("status", "==", "active")
-    .where("isBestSeller", "==", true)
-    .orderBy("createdAt", "desc")
-    .limit(12)
-    .get();
+  try {
+    const snapshot = await db()
+      .collection("products")
+      .where("status", "==", "active")
+      .where("isBestSeller", "==", true)
+      .orderBy("createdAt", "desc")
+      .limit(12)
+      .get();
 
-  return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+    return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+  } catch (error) {
+    if (!isIndexError(error)) throw error;
+    return sortProducts(
+      (await fetchActiveProducts()).filter((product) => product.isBestSeller),
+      "newest",
+    ).slice(0, 12);
+  }
 }
 
 export async function fetchNewProducts(): Promise<Product[]> {
-  const snapshot = await db()
-    .collection("products")
-    .where("status", "==", "active")
-    .where("isNew", "==", true)
-    .orderBy("createdAt", "desc")
-    .limit(12)
-    .get();
+  try {
+    const snapshot = await db()
+      .collection("products")
+      .where("status", "==", "active")
+      .where("isNew", "==", true)
+      .orderBy("createdAt", "desc")
+      .limit(12)
+      .get();
 
-  return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+    return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+  } catch (error) {
+    if (!isIndexError(error)) throw error;
+    return sortProducts(
+      (await fetchActiveProducts()).filter((product) => product.isNew),
+      "newest",
+    ).slice(0, 12);
+  }
 }
 
 export async function fetchSaleProducts(): Promise<Product[]> {
-  const snapshot = await db()
-    .collection("products")
-    .where("status", "==", "active")
-    .orderBy("createdAt", "desc")
-    .limit(48)
-    .get();
+  try {
+    const snapshot = await db()
+      .collection("products")
+      .where("status", "==", "active")
+      .orderBy("createdAt", "desc")
+      .limit(48)
+      .get();
 
-  return snapshot.docs
-    .map((doc) => parseProduct(doc.id, doc.data()))
-    .filter(
-      (product) =>
-        product.compareAtPrice != null && product.compareAtPrice > product.minPrice,
-    )
-    .slice(0, 12);
+    return snapshot.docs
+      .map((doc) => parseProduct(doc.id, doc.data()))
+      .filter(
+        (product) =>
+          product.compareAtPrice != null && product.compareAtPrice > product.minPrice,
+      )
+      .slice(0, 12);
+  } catch (error) {
+    if (!isIndexError(error)) throw error;
+    return sortProducts(await fetchActiveProducts(), "newest")
+      .filter(
+        (product) =>
+          product.compareAtPrice != null && product.compareAtPrice > product.minPrice,
+      )
+      .slice(0, 12);
+  }
 }
 
 export async function fetchActiveCategorySlugs(): Promise<string[]> {

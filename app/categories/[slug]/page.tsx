@@ -9,6 +9,7 @@ import {
   listProducts,
 } from "@/lib/catalog";
 import { categoryMap, categoryPath } from "@/lib/catalog/tree";
+import type { ListProductsResult } from "@/types/catalog";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -29,12 +30,16 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const category = await getCategoryBySlug(slug);
-  if (!category) return { title: slug };
-  return {
-    title: category.seo.title,
-    description: category.seo.description,
-  };
+  try {
+    const category = await getCategoryBySlug(slug);
+    if (!category) return { title: slug };
+    return {
+      title: category.seo.title,
+      description: category.seo.description,
+    };
+  } catch {
+    return { title: slug };
+  }
 }
 
 export default async function CategoryPage({ params, searchParams }: Props) {
@@ -49,11 +54,16 @@ export default async function CategoryPage({ params, searchParams }: Props) {
 
   if (!category) notFound();
 
-  const listing = await listProducts({
-    categoryId: category.id,
-    page,
-    pageSize: 8,
-  });
+  let listing: ListProductsResult = { items: [], page, pageSize: 8, total: 0 };
+  try {
+    listing = await listProducts({
+      categoryId: category.id,
+      page,
+      pageSize: 8,
+    });
+  } catch (error) {
+    console.error("Failed to list category products", error);
+  }
   const path = categoryPath(tree, category);
   const byId = categoryMap(tree);
   const node = byId.get(category.id);

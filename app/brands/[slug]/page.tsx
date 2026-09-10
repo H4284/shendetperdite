@@ -7,6 +7,7 @@ import {
   getBrands,
   listProducts,
 } from "@/lib/catalog";
+import type { ListProductsResult } from "@/types/catalog";
 
 export const revalidate = 3600;
 export const dynamicParams = true;
@@ -27,12 +28,16 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const brand = await getBrandBySlug(slug);
-  if (!brand) return { title: slug };
-  return {
-    title: brand.seo.title,
-    description: brand.seo.description,
-  };
+  try {
+    const brand = await getBrandBySlug(slug);
+    if (!brand) return { title: slug };
+    return {
+      title: brand.seo.title,
+      description: brand.seo.description,
+    };
+  } catch {
+    return { title: slug };
+  }
 }
 
 export default async function BrandPage({ params, searchParams }: Props) {
@@ -43,11 +48,16 @@ export default async function BrandPage({ params, searchParams }: Props) {
 
   if (!brand) notFound();
 
-  const listing = await listProducts({
-    brandId: brand.id,
-    page,
-    pageSize: 8,
-  });
+  let listing: ListProductsResult = { items: [], page, pageSize: 8, total: 0 };
+  try {
+    listing = await listProducts({
+      brandId: brand.id,
+      page,
+      pageSize: 8,
+    });
+  } catch (error) {
+    console.error("Failed to list brand products", error);
+  }
 
   return (
     <CatalogListing

@@ -18,10 +18,16 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
 
 export default async function SearchPage({ searchParams }: Props) {
   const { q = "" } = await searchParams;
-  const [products, brands] = await Promise.all([
-    q ? searchProducts(q) : Promise.resolve([]),
-    getBrands(),
-  ]);
+  let products: Awaited<ReturnType<typeof searchProducts>> = [];
+  let brands: Awaited<ReturnType<typeof getBrands>> = [];
+  try {
+    [products, brands] = await Promise.all([
+      q ? searchProducts(q) : Promise.resolve([]),
+      getBrands(),
+    ]);
+  } catch (error) {
+    console.error("Failed to search products", error);
+  }
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8">
