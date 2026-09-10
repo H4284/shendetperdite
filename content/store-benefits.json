@@ -1,0 +1,22 @@
+[
+  {
+    "id": "shipping",
+    "title": "Transport falas",
+    "body": "Porosi mbi 50 €"
+  },
+  {
+    "id": "quality",
+    "title": "Cilësi e garantuar",
+    "body": "Produkte të certifikuara"
+  },
+  {
+    "id": "natural",
+    "title": "Përbërës natyralë",
+    "body": "Formula të pastra"
+  },
+  {
+    "id": "curated",
+    "title": "Zgjedhje profesionale",
+    "body": "Përzgjedhje e kuruar"
+  }
+]

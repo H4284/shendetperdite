@@ -14,7 +14,9 @@ export function Price({
 
   return (
     <div className={cn("flex flex-wrap items-baseline gap-2", className)}>
-      <span className="font-semibold text-foreground">{formatPrice(price)}</span>
+      <span className={onSale ? "font-semibold text-primary" : "font-semibold text-foreground"}>
+        {formatPrice(price)}
+      </span>
       {onSale ? (
         <span className="text-sm text-muted-foreground line-through">
           {formatPrice(compareAtPrice)}

@@ -9,7 +9,7 @@ export function MegaMenu() {
         <li key={item.slug} className="group relative">
           <button
             type="button"
-            className="flex h-11 items-center px-3 text-sm font-medium text-foreground/80 transition-colors hover:text-foreground"
+            className="flex h-11 items-center px-3 text-sm font-medium text-foreground/80 transition-colors hover:text-primary"
             aria-haspopup="true"
           >
             {item.name}
@@ -21,7 +21,7 @@ export function MegaMenu() {
                   href={`/categories/${item.slug}`}
                   className="mb-2 block rounded-md px-3 py-2 text-sm font-medium hover:bg-muted"
                 >
-                  {t("search.viewAll", { name: item.name })}
+                  {t("nav.viewAll", { name: item.name })}
                 </Link>
               ) : null}
               <ul className="flex flex-col">

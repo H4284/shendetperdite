@@ -1,0 +1,123 @@
+{
+  "logo": "https://shendetperdite.com/storage/branding/01KVWCEED8KPFVPF3D9AN0VMZW.svg",
+  "categories": {
+    "vitamina-minerale": "https://shendetperdite.com/storage/664/conversions/01KVR3AD9SFNY1XWCYS9QGKHMQ-card.webp",
+    "fitness": "https://shendetperdite.com/storage/666/conversions/01KVR3EG4NW73YB084SXNG9VS6-card.webp",
+    "shendeti": "https://shendetperdite.com/storage/667/conversions/01KVR3FJA7MRHGZZQT86VAG5GZ-card.webp",
+    "shendeti-i-tretjes": "https://shendetperdite.com/storage/667/conversions/01KVR3FJA7MRHGZZQT86VAG5GZ-card.webp",
+    "bukuri-kujdes-personal": "https://shendetperdite.com/storage/668/conversions/01KVR3HK5VHAZJPQC5F4M5ZXCZ-card.webp",
+    "shendeti-i-trurit-fokusit": "https://shendetperdite.com/storage/669/conversions/01KVR3JCQZ1B2YKQQCCG4WG9VE-card.webp",
+    "shendeti-i-zemres": "https://shendetperdite.com/storage/670/conversions/01KVR3K75Y8Y9JABFSAA4G7PT4-card.webp",
+    "shendeti-i-gjumit": "https://shendetperdite.com/storage/671/conversions/01KVR3KV340BGMA5RBNTAW17M8-card.webp",
+    "per-ty": "https://shendetperdite.com/storage/672/conversions/01KVR3MPPA7X46JQXV882G6S2Z-card.webp",
+    "per-gra": "https://shendetperdite.com/storage/672/conversions/01KVR3MPPA7X46JQXV882G6S2Z-card.webp",
+    "per-burra": "https://shendetperdite.com/storage/673/conversions/01KVR3NCD52XJ9SW1YTJB6MKK9-card.webp",
+    "per-femije": "https://shendetperdite.com/storage/674/conversions/01KVR3P0ZQQXE8K4RCJWQ25K46-card.webp",
+    "proteina": "https://shendetperdite.com/storage/666/conversions/01KVR3EG4NW73YB084SXNG9VS6-card.webp",
+    "kreatine-performance": "https://shendetperdite.com/storage/666/conversions/01KVR3EG4NW73YB084SXNG9VS6-card.webp",
+    "aminoacide": "https://shendetperdite.com/storage/666/conversions/01KVR3EG4NW73YB084SXNG9VS6-card.webp",
+    "aksesore": "https://shendetperdite.com/storage/666/conversions/01KVR3EG4NW73YB084SXNG9VS6-card.webp",
+    "menaxhim-peshe": "https://shendetperdite.com/storage/666/conversions/01KVR3EG4NW73YB084SXNG9VS6-card.webp",
+    "multivitamina": "https://shendetperdite.com/storage/664/conversions/01KVR3AD9SFNY1XWCYS9QGKHMQ-card.webp",
+    "vitamina-individuale": "https://shendetperdite.com/storage/664/conversions/01KVR3AD9SFNY1XWCYS9QGKHMQ-card.webp",
+    "minerale": "https://shendetperdite.com/storage/664/conversions/01KVR3AD9SFNY1XWCYS9QGKHMQ-card.webp",
+    "omega-vajra": "https://shendetperdite.com/storage/664/conversions/01KVR3AD9SFNY1XWCYS9QGKHMQ-card.webp",
+    "imunitet": "https://shendetperdite.com/storage/664/conversions/01KVR3AD9SFNY1XWCYS9QGKHMQ-card.webp",
+    "kolagjen": "https://shendetperdite.com/storage/668/conversions/01KVR3HK5VHAZJPQC5F4M5ZXCZ-card.webp",
+    "floke-lekure-thonj": "https://shendetperdite.com/storage/668/conversions/01KVR3HK5VHAZJPQC5F4M5ZXCZ-card.webp",
+    "kremra-kujdes-trupi": "https://shendetperdite.com/storage/668/conversions/01KVR3HK5VHAZJPQC5F4M5ZXCZ-card.webp"
+  },
+  "brands": {
+    "proteinocean": "https://shendetperdite.com/storage/680/01KVWKRGWJ4WS8TJ19R4Z0SCSH.svg",
+    "now-foods": "https://shendetperdite.com/storage/678/01KVWKN6VBG1S8P8PKWWHRM3XE.svg",
+    "nowsports": "https://shendetperdite.com/storage/679/conversions/01KVWKP46S82705WVJM2PZ9ZZ0-thumb.webp",
+    "haliborange": "https://shendetperdite.com/storage/681/conversions/01KVWKSZWCK0P7X03JQCFVXZCA-thumb.webp",
+    "dietmed": "https://shendetperdite.com/storage/683/conversions/01KVWKZVGB312NXC0PVWKHRPQT-thumb.webp",
+    "sambucol": "https://shendetperdite.com/storage/685/conversions/01KVWM5JKP66NNPPMR8QC8GWHD-thumb.webp",
+    "vitabiotics": "https://shendetperdite.com/storage/676/conversions/01KVWK32Q82189GBYXN5875TX3-thumb.webp",
+    "solepharma": "https://shendetperdite.com/storage/684/conversions/01KVWM3G0395MMRV2Y54HCQTDR-thumb.webp",
+    "opko": "https://shendetperdite.com/storage/686/conversions/01KVWM7DR4JS6HEKYF8CJDN9T2-thumb.webp"
+  },
+  "products": {
+    "proteinocean-whey-protein": {
+      "image": "https://shendetperdite.com/storage/8/conversions/01KPWQBHRS1W646VHGVD9A5HG9-card.webp",
+      "hover": "https://shendetperdite.com/storage/8/conversions/01KPWQBHRS1W646VHGVD9A5HG9-card_lg.webp"
+    },
+    "nowsports-whey-protein-isolate": {
+      "image": "https://shendetperdite.com/storage/653/conversions/01KVJG5VRY2GP0RJAQZA7B7EXM-card.webp",
+      "hover": "https://shendetperdite.com/storage/651/conversions/01KVJG25JD9FYE36KK1VJK9NB7-card.webp"
+    },
+    "proteinocean-clear-whey": {
+      "image": "https://shendetperdite.com/storage/14/conversions/01KPWTBCE7RQZ6FFFCJQRCK929-card.webp",
+      "hover": "https://shendetperdite.com/storage/14/conversions/01KPWTBCE7RQZ6FFFCJQRCK929-card_lg.webp"
+    },
+    "proteinocean-mass-gainer": {
+      "image": "https://shendetperdite.com/storage/49/conversions/01KQAZJEKXNS0G1DXKZQ55R1C8-card.webp",
+      "hover": "https://shendetperdite.com/storage/49/conversions/01KQAZJEKXNS0G1DXKZQ55R1C8-card_lg.webp"
+    },
+    "proteinocean-bcaa": {
+      "image": "https://shendetperdite.com/storage/32/conversions/01KQ5JDCWZP28Y5QDF9RBTDSVV-card.webp",
+      "hover": "https://shendetperdite.com/storage/32/conversions/01KQ5JDCWZP28Y5QDF9RBTDSVV-card_lg.webp"
+    },
+    "nowsports-micronized-creatine": {
+      "image": "https://shendetperdite.com/storage/80/conversions/01KRK6ZZ10HFETGCD5209VQZM6-card.webp",
+      "hover": "https://shendetperdite.com/storage/80/conversions/01KRK6ZZ10HFETGCD5209VQZM6-card_lg.webp"
+    },
+    "proteinocean-creatine": {
+      "image": "https://shendetperdite.com/storage/661/conversions/01KVMZERJ3SB4XJ6TYNWJT6R5D-card.webp",
+      "hover": "https://shendetperdite.com/storage/661/conversions/01KVMZERJ3SB4XJ6TYNWJT6R5D-card_lg.webp"
+    },
+    "now-foods-magnesium-glycinate": {
+      "image": "https://shendetperdite.com/storage/701/conversions/01KYPKT5FACM8KZNN7NCNQ73ZS-card.webp",
+      "hover": "https://shendetperdite.com/storage/701/conversions/01KYPKT5FACM8KZNN7NCNQ73ZS-card_lg.webp"
+    },
+    "proteinocean-l-carnitine": {
+      "image": "https://shendetperdite.com/storage/44/conversions/01KQ5QS1GMM8V4GP60GTDMSJ2V-card.webp",
+      "hover": "https://shendetperdite.com/storage/44/conversions/01KQ5QS1GMM8V4GP60GTDMSJ2V-card_lg.webp"
+    },
+    "now-foods-vitamin-d3": {
+      "image": "https://shendetperdite.com/storage/611/conversions/01KV30QBX9HQV7MWHG6KYFTXG6-card.webp",
+      "hover": "https://shendetperdite.com/storage/611/conversions/01KV30QBX9HQV7MWHG6KYFTXG6-card_lg.webp"
+    },
+    "now-foods-ultra-omega-3": {
+      "image": "https://shendetperdite.com/storage/724/conversions/01KYSBJYK76YG2J0XRSS8J5WAV-card.webp",
+      "hover": "https://shendetperdite.com/storage/724/conversions/01KYSBJYK76YG2J0XRSS8J5WAV-card_lg.webp"
+    },
+    "sambucol-immune": {
+      "image": "https://shendetperdite.com/storage/565/conversions/01KT9YHEPNDF2HFFPMRG4KEX5H-card.webp",
+      "hover": "https://shendetperdite.com/storage/565/conversions/01KT9YHEPNDF2HFFPMRG4KEX5H-card_lg.webp"
+    },
+    "vitabiotics-wellwoman": {
+      "image": "https://shendetperdite.com/storage/597/conversions/01KTA5A0HRJZ7X6DE0RG4CW5P4-card.webp",
+      "hover": "https://shendetperdite.com/storage/597/conversions/01KTA5A0HRJZ7X6DE0RG4CW5P4-card_lg.webp"
+    },
+    "haliborange-kids": {
+      "image": "https://shendetperdite.com/storage/628/conversions/01KVGWSYGB8GCVE59MW6YRXY59-card.webp",
+      "hover": "https://shendetperdite.com/storage/628/conversions/01KVGWSYGB8GCVE59MW6YRXY59-card_lg.webp"
+    },
+    "dietmed-omega": {
+      "image": "https://shendetperdite.com/storage/600/conversions/01KTA5CG8ECGAJ081YD3MZW1M2-card.webp",
+      "hover": "https://shendetperdite.com/storage/600/conversions/01KTA5CG8ECGAJ081YD3MZW1M2-card_lg.webp"
+    },
+    "solepharma-calcium": {
+      "image": "https://shendetperdite.com/storage/637/conversions/01KVH20YX6QF0PR2P1N4HGATMW-card.webp",
+      "hover": "https://shendetperdite.com/storage/637/conversions/01KVH20YX6QF0PR2P1N4HGATMW-card_lg.webp"
+    },
+    "opko-vitamin-c": {
+      "image": "https://shendetperdite.com/storage/306/conversions/01KS3CM2BQ5KCZDRBBVY5YWWEX-card.webp",
+      "hover": "https://shendetperdite.com/storage/306/conversions/01KS3CM2BQ5KCZDRBBVY5YWWEX-card_lg.webp"
+    },
+    "abdi-ibrahim-zinc": {
+      "image": "https://shendetperdite.com/storage/196/conversions/01KRXFQVM716D8C9SBWYMBG883-card.webp",
+      "hover": "https://shendetperdite.com/storage/196/conversions/01KRXFQVM716D8C9SBWYMBG883-card_lg.webp"
+    },
+    "nowsports-pre-workout": {
+      "image": "https://shendetperdite.com/storage/27/conversions/01KQ5FWWN7TPXSG6G9C31DX31N-card.webp",
+      "hover": "https://shendetperdite.com/storage/27/conversions/01KQ5FWWN7TPXSG6G9C31DX31N-card_lg.webp"
+    },
+    "now-foods-probiotic": {
+      "image": "https://shendetperdite.com/storage/336/conversions/01KS50JJH9R2YDQABP80Y0KK9V-card.webp",
+      "hover": "https://shendetperdite.com/storage/336/conversions/01KS50JJH9R2YDQABP80Y0KK9V-card_lg.webp"
+    }
+  }
+}

@@ -36,7 +36,7 @@ export function NewsletterSignup() {
   }
 
   return (
-    <section className="rounded-xl border bg-muted/40 px-4 py-10 md:px-8">
+    <section className="rounded-2xl bg-muted/50 px-4 py-12 md:px-8">
       <div className="mx-auto max-w-xl space-y-3 text-center">
         <h2 className="text-2xl font-semibold tracking-tight">
           {t("home.newsletterTitle")}

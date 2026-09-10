@@ -1,10 +1,26 @@
+import liveMedia from "../content/live-media.json";
 import { computeProductAggregates } from "../lib/catalog/aggregates";
 import { buildSearchTokens } from "../lib/catalog/search-tokens";
 import type { Brand, Category, Product, Variant } from "../types/catalog";
 
 const IMAGE = "https://placehold.co/800x800/0f766e/ffffff.png";
 const IMAGE_HOVER = "https://placehold.co/800x800/115e59/d1fae5.png";
-const LOGO = "https://placehold.co/240x80/111111/ffffff.png";
+
+type LiveCategorySlug = keyof typeof liveMedia.categories;
+type LiveBrandSlug = keyof typeof liveMedia.brands;
+type LiveProductId = keyof typeof liveMedia.products;
+
+function liveCategoryImage(slug: string, parentId: string | null) {
+  return (
+    liveMedia.categories[slug as LiveCategorySlug] ??
+    (parentId ? liveMedia.categories[parentId as LiveCategorySlug] : undefined) ??
+    IMAGE
+  );
+}
+
+function liveBrandLogo(id: string) {
+  return liveMedia.brands[id as LiveBrandSlug] ?? null;
+}
 
 const now = new Date("2026-09-01T10:00:00.000Z");
 
@@ -12,7 +28,7 @@ function daysAgo(days: number) {
   return new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
 }
 
-export const seedCategories: Category[] = [
+const seedCategoryDrafts: Category[] = [
   {
     id: "vitamina-minerale",
     name: "Vitamina & Minerale",
@@ -152,6 +168,116 @@ export const seedCategories: Category[] = [
     seo: { title: "Shëndeti i tretjes", description: "Produkte për tretjen." },
   },
   {
+    id: "vitamina-individuale",
+    name: "Vitamina Individuale",
+    slug: "vitamina-individuale",
+    description: "Vitamina të veçanta sipas nevojës.",
+    image: IMAGE,
+    parentId: "vitamina-minerale",
+    order: 1,
+    isActive: true,
+    seo: { title: "Vitamina Individuale", description: "Vitamina individuale." },
+  },
+  {
+    id: "minerale",
+    name: "Minerale",
+    slug: "minerale",
+    description: "Magnezium, zink, kalcium dhe minerale të tjera.",
+    image: IMAGE,
+    parentId: "vitamina-minerale",
+    order: 2,
+    isActive: true,
+    seo: { title: "Minerale", description: "Minerale për ekuilibër." },
+  },
+  {
+    id: "omega-vajra",
+    name: "Omega & Vajra",
+    slug: "omega-vajra",
+    description: "Omega-3 dhe vajra të dobishëm.",
+    image: IMAGE,
+    parentId: "vitamina-minerale",
+    order: 3,
+    isActive: true,
+    seo: { title: "Omega & Vajra", description: "Omega dhe vajra." },
+  },
+  {
+    id: "imunitet",
+    name: "Imunitet",
+    slug: "imunitet",
+    description: "Mbështetje për sistemin imunitar.",
+    image: IMAGE,
+    parentId: "vitamina-minerale",
+    order: 4,
+    isActive: true,
+    seo: { title: "Imunitet", description: "Produkte për imunitetin." },
+  },
+  {
+    id: "shendeti-i-zemres",
+    name: "Shëndeti i zemrës",
+    slug: "shendeti-i-zemres",
+    description: "Mbështetje për zemrën dhe qarkullimin.",
+    image: IMAGE,
+    parentId: "shendeti",
+    order: 1,
+    isActive: true,
+    seo: { title: "Shëndeti i zemrës", description: "Produkte për zemrën." },
+  },
+  {
+    id: "shendeti-i-trurit-fokusit",
+    name: "Shëndeti i trurit & fokusit",
+    slug: "shendeti-i-trurit-fokusit",
+    description: "Fokus, memorie dhe energji mendore.",
+    image: IMAGE,
+    parentId: "shendeti",
+    order: 2,
+    isActive: true,
+    seo: { title: "Shëndeti i trurit & fokusit", description: "Produkte për fokusin." },
+  },
+  {
+    id: "shendeti-i-gjumit",
+    name: "Shëndeti i gjumit",
+    slug: "shendeti-i-gjumit",
+    description: "Gjumi dhe relaksimi.",
+    image: IMAGE,
+    parentId: "shendeti",
+    order: 3,
+    isActive: true,
+    seo: { title: "Shëndeti i gjumit", description: "Produkte për gjumin." },
+  },
+  {
+    id: "floke-lekure-thonj",
+    name: "Flokë, Lëkurë & Thonj",
+    slug: "floke-lekure-thonj",
+    description: "Kujdes për flokët, lëkurën dhe thonjtë.",
+    image: IMAGE,
+    parentId: "bukuri-kujdes-personal",
+    order: 0,
+    isActive: true,
+    seo: { title: "Flokë, Lëkurë & Thonj", description: "Bukuri nga brenda." },
+  },
+  {
+    id: "kolagjen",
+    name: "Kolagjen",
+    slug: "kolagjen",
+    description: "Kolagjen për lëkurën dhe nyjet.",
+    image: IMAGE,
+    parentId: "bukuri-kujdes-personal",
+    order: 1,
+    isActive: true,
+    seo: { title: "Kolagjen", description: "Produkte me kolagjen." },
+  },
+  {
+    id: "kremra-kujdes-trupi",
+    name: "Kremra & Kujdes Trupi",
+    slug: "kremra-kujdes-trupi",
+    description: "Kujdes për trupin dhe lëkurën.",
+    image: IMAGE,
+    parentId: "bukuri-kujdes-personal",
+    order: 2,
+    isActive: true,
+    seo: { title: "Kremra & Kujdes Trupi", description: "Kujdes trupor." },
+  },
+  {
     id: "per-gra",
     name: "Për Gra",
     slug: "per-gra",
@@ -162,7 +288,34 @@ export const seedCategories: Category[] = [
     isActive: true,
     seo: { title: "Për Gra", description: "Suplemente për gratë." },
   },
+  {
+    id: "per-burra",
+    name: "Për Burra",
+    slug: "per-burra",
+    description: "Formula të dizajnuara për burrat.",
+    image: IMAGE,
+    parentId: "per-ty",
+    order: 1,
+    isActive: true,
+    seo: { title: "Për Burra", description: "Suplemente për burrat." },
+  },
+  {
+    id: "per-femije",
+    name: "Për Fëmijë",
+    slug: "per-femije",
+    description: "Vitamina dhe formula për fëmijë.",
+    image: IMAGE,
+    parentId: "per-ty",
+    order: 2,
+    isActive: true,
+    seo: { title: "Për Fëmijë", description: "Suplemente për fëmijë." },
+  },
 ];
+
+export const seedCategories: Category[] = seedCategoryDrafts.map((category) => ({
+  ...category,
+  image: liveCategoryImage(category.slug, category.parentId),
+}));
 
 export const seedBrands: Brand[] = [
   ["proteinocean", "Proteinocean", "Proteina dhe performancë."],
@@ -179,7 +332,7 @@ export const seedBrands: Brand[] = [
   id,
   name,
   slug: id,
-  logo: LOGO,
+  logo: liveBrandLogo(id),
   description,
   isActive: true,
   seo: { title: name, description },
@@ -190,6 +343,26 @@ type SeedProduct = Omit<Product, "createdAt" | "updatedAt" | "searchTokens" | "m
   createdAt?: Date;
   variants: SeedVariant[];
 };
+
+function withLiveProductMedia(product: SeedProduct): SeedProduct {
+  const media = liveMedia.products[product.id as LiveProductId];
+  const fallback = product.categoryIds
+    .map((id) => liveMedia.categories[id as LiveCategorySlug])
+    .find(Boolean);
+  const url = media?.image ?? fallback ?? IMAGE;
+  const hover = media?.hover ?? url;
+  return {
+    ...product,
+    images: [
+      { url, alt: product.name, order: 0 },
+      { url: hover, alt: product.name, order: 1 },
+    ],
+    variants: product.variants.map((variant) => ({
+      ...variant,
+      image: url === IMAGE ? null : url,
+    })),
+  };
+}
 
 function image(alt: string) {
   return [
@@ -401,7 +574,8 @@ for (const item of simpleProducts) {
   });
 }
 
-export const seedProducts = seedProductDrafts.map((product, index) => {
+export const seedProducts = seedProductDrafts.map((draft, index) => {
+  const product = withLiveProductMedia(draft);
   const createdAt = daysAgo(seedProductDrafts.length - index);
   const aggregates = computeProductAggregates(product.variants, product.basePrice);
   const brand = seedBrands.find((entry) => entry.id === product.brandId);

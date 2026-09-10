@@ -1,29 +1,22 @@
 [
   {
-    "id": "vitamins",
-    "title": "Vitamina për çdo ditë",
-    "subtitle": "Formula të certifikuara për energji, imunitet dhe ekuilibër.",
-    "cta": "Shiko vitaminat",
-    "href": "/categories/vitamina-minerale",
-    "image": "https://placehold.co/1600x700/0f766e/ffffff.png",
-    "alt": "Vitamina dhe minerale"
-  },
-  {
-    "id": "fitness",
-    "title": "Proteina dhe performancë",
-    "subtitle": "Whey, kreatinë dhe BCAA për stërvitjen tuaj.",
-    "cta": "Shiko Fitness",
-    "href": "/categories/fitness",
-    "image": "https://placehold.co/1600x700/134e4a/ffffff.png",
-    "alt": "Produkte fitness"
-  },
-  {
-    "id": "brands",
-    "title": "Markat që i besojmë",
-    "subtitle": "NOW Foods, Proteinocean, Vitabiotics dhe më shumë.",
-    "cta": "Zbulo markat",
+    "id": "now-foods",
+    "title": "NOW Foods",
+    "subtitle": "Live Happy. Live Healthy. Live NOW.",
+    "cta": "Eksploro NOW Foods",
     "href": "/brands/now-foods",
-    "image": "https://placehold.co/1600x700/111827/ffffff.png",
-    "alt": "Brendet e besuara"
+    "image": "https://shendetperdite.com/storage/hero-slides/01KWYYZ2ZWQ1YABWHS56PMGBQX_optimized.webp",
+    "alt": "NOW Foods - Mbështetje për imunitetin",
+    "textColor": "dark"
+  },
+  {
+    "id": "proteinocean",
+    "title": "Ndërto. Forcohu. Performo.",
+    "subtitle": "Whey, Creatine & Pre-Workout",
+    "cta": "Blej ProteinOcean",
+    "href": "/brands/proteinocean",
+    "image": "https://shendetperdite.com/storage/hero-slides/01KV59JEGDQ71JGN1R1FRBCWF4_optimized.webp",
+    "alt": "Proteinocean — whey, creatine dhe pre-workout",
+    "textColor": "light"
   }
 ]

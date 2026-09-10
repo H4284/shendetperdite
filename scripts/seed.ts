@@ -24,6 +24,7 @@ if (isProd) {
   process.env.FIRESTORE_EMULATOR_HOST ||= "127.0.0.1:8080";
   process.env.FIREBASE_AUTH_EMULATOR_HOST ||= "127.0.0.1:9099";
   process.env.FIREBASE_STORAGE_EMULATOR_HOST ||= "127.0.0.1:9199";
+  process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS = "true";
   process.env.FIREBASE_PROJECT_ID ||= "demo-shendetperdite";
 }
 

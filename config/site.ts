@@ -45,7 +45,7 @@ export const siteConfig = {
     {
       name: "Shëndeti",
       slug: "shendeti",
-      hasLanding: false,
+      hasLanding: true,
       children: [
         { name: "Shëndeti i tretjes", slug: "shendeti-i-tretjes" },
         { name: "Shëndeti i zemrës", slug: "shendeti-i-zemres" },
@@ -66,7 +66,7 @@ export const siteConfig = {
     {
       name: "Për Ty",
       slug: "per-ty",
-      hasLanding: false,
+      hasLanding: true,
       children: [
         { name: "Për Gra", slug: "per-gra" },
         { name: "Për Burra", slug: "per-burra" },
@@ -82,6 +82,10 @@ export const siteConfig = {
     { name: "Termet dhe Kushtet", href: "/terms" },
   ],
   freeShippingFrom: 50,
+  social: {
+    instagram: "https://www.instagram.com/shendetperdite",
+    facebook: "https://facebook.com/shendetperdite",
+  },
 } as const;
 
 export function findNavBySlug(slug: string) {
@@ -89,6 +93,13 @@ export function findNavBySlug(slug: string) {
     if (item.slug === slug) return item;
     const child = item.children.find((entry) => entry.slug === slug);
     if (child) return child;
+  }
+  return null;
+}
+
+export function findNavParentSlug(slug: string) {
+  for (const item of siteConfig.nav) {
+    if (item.children.some((entry) => entry.slug === slug)) return item.slug;
   }
   return null;
 }

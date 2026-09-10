@@ -10,10 +10,12 @@ import type { Product } from "@/types/catalog";
 
 export function ProductCarousel({
   title,
+  subtitle,
   products,
   brandNames,
 }: {
   title: string;
+  subtitle?: string;
   products: Product[];
   brandNames: Record<string, string>;
 }) {
@@ -22,8 +24,13 @@ export function ProductCarousel({
   return (
     <section className="space-y-4">
       <Carousel opts={{ align: "start", dragFree: true }} className="space-y-4">
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+            {subtitle ? (
+              <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+            ) : null}
+          </div>
           <div className="flex items-center gap-2">
             <CarouselPrevious className="static inset-auto size-8 translate-y-0" />
             <CarouselNext className="static inset-auto size-8 translate-y-0" />

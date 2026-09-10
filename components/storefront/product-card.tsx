@@ -24,7 +24,7 @@ export function ProductCard({
   return (
     <article className="group">
       <Link href={`/products/${product.slug}`} className="block">
-        <div className="relative aspect-square overflow-hidden rounded-xl bg-muted">
+        <div className="relative aspect-square overflow-hidden rounded-2xl bg-muted">
           {primary ? (
             <>
               <CatalogImage

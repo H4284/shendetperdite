@@ -11,6 +11,7 @@ export function TrustedBrands({ brands }: { brands: Brand[] }) {
       <h2 className="text-2xl font-semibold tracking-tight">
         {t("home.trustedBrands")}
       </h2>
+      <p className="text-sm text-muted-foreground">{t("home.trustedBrandsSubtitle")}</p>
       <div className="grid grid-cols-2 items-center gap-4 sm:grid-cols-5">
         {brands.map((brand) => (
           <Link

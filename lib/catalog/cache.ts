@@ -12,9 +12,16 @@ import {
   fetchSaleProducts,
   fetchSearchProducts,
 } from "@/lib/catalog/queries";
+import {
+  applyLiveBrandMedia,
+  applyLiveCategoryMedia,
+  applyLiveCategoryTree,
+  applyLiveProductMedia,
+} from "@/lib/catalog/live-media";
 import type { ListProductsInput, Product } from "@/types/catalog";
 
 const PRODUCTS_TAG = "products";
+const CACHE_VERSION = "live-media-v1";
 
 function productTag(slug: string) {
   return `product:${slug}`;
@@ -24,34 +31,39 @@ export function revalidateCatalog(tag: string = PRODUCTS_TAG) {
   revalidateTag(tag);
 }
 
-export const getCategoryTree = unstable_cache(
-  fetchCategoryTree,
-  ["catalog-category-tree"],
-  { tags: [PRODUCTS_TAG] },
-);
+export async function getCategoryTree() {
+  const tree = await unstable_cache(fetchCategoryTree, [CACHE_VERSION, "catalog-category-tree"], {
+    tags: [PRODUCTS_TAG],
+  })();
+  return applyLiveCategoryTree(tree);
+}
 
 export async function getCategoryBySlug(slug: string) {
-  return unstable_cache(
+  const category = await unstable_cache(
     () => fetchCategoryBySlug(slug),
-    ["catalog-category", slug],
+    [CACHE_VERSION, "catalog-category", slug],
     { tags: [PRODUCTS_TAG] },
   )();
+  return category ? applyLiveCategoryMedia(category) : null;
 }
 
 export async function getBrandBySlug(slug: string) {
-  return unstable_cache(
+  const brand = await unstable_cache(
     () => fetchBrandBySlug(slug),
-    ["catalog-brand", slug],
+    [CACHE_VERSION, "catalog-brand", slug],
     { tags: [PRODUCTS_TAG] },
   )();
+  return brand ? applyLiveBrandMedia(brand) : null;
 }
 
 export async function getProductBySlug(slug: string) {
-  return unstable_cache(
+  const product = await unstable_cache(
     () => fetchProductBySlug(slug),
-    ["catalog-product", slug],
+    [CACHE_VERSION, "catalog-product", slug],
     { tags: [PRODUCTS_TAG, productTag(slug)] },
   )();
+  if (!product) return null;
+  return { ...applyLiveProductMedia(product), variants: product.variants };
 }
 
 export async function listProducts(input: ListProductsInput = {}) {
@@ -63,49 +75,60 @@ export async function listProducts(input: ListProductsInput = {}) {
     sort: input.sort ?? "newest",
   });
 
-  return unstable_cache(
+  const listing = await unstable_cache(
     () => fetchProducts(input),
-    ["catalog-list-products", key],
+    [CACHE_VERSION, "catalog-list-products", key],
     { tags: [PRODUCTS_TAG] },
   )();
+
+  return {
+    ...listing,
+    items: listing.items.map(applyLiveProductMedia),
+  };
 }
 
 export async function searchProducts(q: string) {
-  return unstable_cache(
+  const products = await unstable_cache(
     () => fetchSearchProducts(q),
-    ["catalog-search", q.toLowerCase().trim()],
+    [CACHE_VERSION, "catalog-search", q.toLowerCase().trim()],
     { tags: [PRODUCTS_TAG] },
   )();
+  return products.map(applyLiveProductMedia);
 }
 
 export async function getRelatedProducts(product: Product) {
-  return unstable_cache(
+  const related = await unstable_cache(
     () => fetchRelatedProducts(product),
-    ["catalog-related", product.id],
+    [CACHE_VERSION, "catalog-related", product.id],
     { tags: [PRODUCTS_TAG, productTag(product.slug)] },
   )();
+  return related.map(applyLiveProductMedia);
 }
 
-export const getBestSellers = unstable_cache(
-  fetchBestSellers,
-  ["catalog-best-sellers"],
-  { tags: [PRODUCTS_TAG] },
-);
+export async function getBestSellers() {
+  const products = await unstable_cache(fetchBestSellers, [CACHE_VERSION, "catalog-best-sellers"], {
+    tags: [PRODUCTS_TAG],
+  })();
+  return products.map(applyLiveProductMedia);
+}
 
-export const getNewProducts = unstable_cache(
-  fetchNewProducts,
-  ["catalog-new-products"],
-  { tags: [PRODUCTS_TAG] },
-);
+export async function getNewProducts() {
+  const products = await unstable_cache(fetchNewProducts, [CACHE_VERSION, "catalog-new-products"], {
+    tags: [PRODUCTS_TAG],
+  })();
+  return products.map(applyLiveProductMedia);
+}
 
-export const getBrands = unstable_cache(
-  fetchBrands,
-  ["catalog-brands"],
-  { tags: [PRODUCTS_TAG] },
-);
+export async function getBrands() {
+  const brands = await unstable_cache(fetchBrands, [CACHE_VERSION, "catalog-brands"], {
+    tags: [PRODUCTS_TAG],
+  })();
+  return brands.map(applyLiveBrandMedia);
+}
 
-export const getSaleProducts = unstable_cache(
-  fetchSaleProducts,
-  ["catalog-sale-products"],
-  { tags: [PRODUCTS_TAG] },
-);
+export async function getSaleProducts() {
+  const products = await unstable_cache(fetchSaleProducts, [CACHE_VERSION, "catalog-sale-products"], {
+    tags: [PRODUCTS_TAG],
+  })();
+  return products.map(applyLiveProductMedia);
+}

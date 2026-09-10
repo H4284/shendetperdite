@@ -7,6 +7,11 @@ import {
 } from "firebase-admin/firestore";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { computeProductAggregates } from "@/lib/catalog/aggregates";
+import {
+  applyLiveBrandMedia,
+  applyLiveCategoryMedia,
+  applyLiveProductMedia,
+} from "@/lib/catalog/live-media";
 import { tokenizeSearchQuery } from "@/lib/catalog/search-tokens";
 import {
   brandSchema,
@@ -45,24 +50,30 @@ function toDate(value: unknown): Date {
 }
 
 function parseCategory(id: string, data: DocumentData): Category {
-  return categorySchema.parse({ id, ...data });
+  return applyLiveCategoryMedia(categorySchema.parse({ id, ...data }));
 }
 
 function parseBrand(id: string, data: DocumentData): Brand {
-  return brandSchema.parse({ id, ...data });
+  return applyLiveBrandMedia(brandSchema.parse({ id, ...data }));
 }
 
 function parseProduct(id: string, data: DocumentData): Product {
-  return productSchema.parse({
-    id,
-    ...data,
-    createdAt: toDate(data.createdAt),
-    updatedAt: toDate(data.updatedAt),
-  });
+  return applyLiveProductMedia(
+    productSchema.parse({
+      id,
+      ...data,
+      createdAt: toDate(data.createdAt),
+      updatedAt: toDate(data.updatedAt),
+    }),
+  );
 }
 
 function parseVariant(id: string, data: DocumentData): Variant {
-  return variantSchema.parse({ id, ...data });
+  const image =
+    typeof data.image === "string" && data.image.includes("placehold.co")
+      ? null
+      : data.image;
+  return variantSchema.parse({ id, ...data, image });
 }
 
 function isIndexError(error: unknown) {

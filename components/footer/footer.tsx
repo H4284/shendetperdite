@@ -7,7 +7,7 @@ export function Footer() {
 
   return (
     <footer className="mt-auto border-t bg-background">
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-[1.2fr_1fr]">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <Link href="/" className="text-sm font-semibold">
             {siteConfig.name}
@@ -30,12 +30,30 @@ export function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-muted-foreground hover:text-primary"
             >
               {link.name}
             </Link>
           ))}
         </nav>
+        <div className="flex flex-col gap-2 text-sm">
+          <a
+            href={siteConfig.social.instagram}
+            className="text-muted-foreground hover:text-primary"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Instagram
+          </a>
+          <a
+            href={siteConfig.social.facebook}
+            className="text-muted-foreground hover:text-primary"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Facebook
+          </a>
+        </div>
       </div>
       <div className="border-t">
         <p className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground">

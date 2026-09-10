@@ -16,11 +16,7 @@ function usingEmulators() {
   if (process.env.VERCEL || process.env.NODE_ENV === "production") {
     return false;
   }
-  return Boolean(
-    process.env.FIRESTORE_EMULATOR_HOST ||
-      process.env.FIREBASE_AUTH_EMULATOR_HOST ||
-      process.env.FIREBASE_STORAGE_EMULATOR_HOST,
-  );
+  return process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true";
 }
 
 function normalizePrivateKey(raw: string) {
@@ -44,6 +40,12 @@ function normalizePrivateKey(raw: string) {
 }
 
 function getAdminApp(): App {
+  if (!usingEmulators()) {
+    delete process.env.FIRESTORE_EMULATOR_HOST;
+    delete process.env.FIREBASE_AUTH_EMULATOR_HOST;
+    delete process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+  }
+
   const existing = getApps()[0];
   if (existing) return existing;
 

@@ -1,18 +1,17 @@
 import { Suspense } from "react";
 import heroSlides from "@/content/hero-slides.json";
-import promos from "@/content/promos.json";
-import { BrandPromo } from "@/components/storefront/brand-promo";
+import homeCategories from "@/content/home-categories.json";
+import storeBenefits from "@/content/store-benefits.json";
 import { CategoryTiles } from "@/components/storefront/category-tiles";
-import { FreeShippingBanner } from "@/components/storefront/free-shipping-banner";
 import { HeroSlider } from "@/components/storefront/hero-slider";
 import { NewsletterSignup } from "@/components/storefront/newsletter-signup";
 import { ProductCarousel } from "@/components/storefront/product-carousel";
 import { ProductGridSkeleton } from "@/components/storefront/skeletons";
+import { StoreBenefits } from "@/components/storefront/store-benefits";
 import { TrustedBrands } from "@/components/storefront/trusted-brands";
 import {
   getBestSellers,
   getBrands,
-  getCategoryTree,
   getNewProducts,
   getSaleProducts,
 } from "@/lib/catalog";
@@ -25,21 +24,13 @@ function brandNames(brands: Brand[]) {
   return Object.fromEntries(brands.map((brand) => [brand.id, brand.name]));
 }
 
-async function HomeCategories() {
-  try {
-    const tree = await getCategoryTree();
-    return <CategoryTiles categories={tree} />;
-  } catch (error) {
-    console.error("Failed to load categories", error);
-    return null;
-  }
-}
-
 async function HomeCarousel({
   title,
+  subtitle,
   loader,
 }: {
   title: string;
+  subtitle?: string;
   loader: () => Promise<Product[]>;
 }) {
   try {
@@ -47,6 +38,7 @@ async function HomeCarousel({
     return (
       <ProductCarousel
         title={title}
+        subtitle={subtitle}
         products={products}
         brandNames={brandNames(brands)}
       />
@@ -71,25 +63,34 @@ export default function HomePage() {
   return (
     <>
       <HeroSlider slides={heroSlides} />
+      <StoreBenefits items={storeBenefits} />
       <div className="mx-auto flex max-w-7xl flex-col gap-16 px-4 py-12">
-        <Suspense fallback={<ProductGridSkeleton count={5} />}>
-          <HomeCategories />
-        </Suspense>
-        <BrandPromo blocks={promos} />
+        <CategoryTiles categories={homeCategories} />
         <Suspense fallback={<ProductGridSkeleton count={4} />}>
-          <HomeCarousel title={t("home.limitedOffers")} loader={getSaleProducts} />
-        </Suspense>
-        <Suspense fallback={<ProductGridSkeleton count={4} />}>
-          <HomeCarousel title={t("home.bestSellers")} loader={getBestSellers} />
+          <HomeCarousel
+            title={t("home.limitedOffers")}
+            subtitle={t("home.limitedOffersSubtitle")}
+            loader={getSaleProducts}
+          />
         </Suspense>
         <Suspense fallback={<ProductGridSkeleton count={4} />}>
-          <HomeCarousel title={t("home.newArrivals")} loader={getNewProducts} />
+          <HomeCarousel
+            title={t("home.bestSellers")}
+            subtitle={t("home.bestSellersSubtitle")}
+            loader={getBestSellers}
+          />
+        </Suspense>
+        <Suspense fallback={<ProductGridSkeleton count={4} />}>
+          <HomeCarousel
+            title={t("home.newArrivals")}
+            subtitle={t("home.newArrivalsSubtitle")}
+            loader={getNewProducts}
+          />
         </Suspense>
         <Suspense fallback={<ProductGridSkeleton count={5} />}>
           <HomeBrands />
         </Suspense>
         <NewsletterSignup />
-        <FreeShippingBanner />
       </div>
     </>
   );

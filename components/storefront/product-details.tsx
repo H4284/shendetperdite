@@ -132,7 +132,7 @@ export function ProductDetails({
         >
           {t("product.addToCart")}
         </Button>
-        <aside className="rounded-xl border bg-muted/40 p-4 text-sm">
+        <aside className="rounded-2xl border bg-primary/5 p-4 text-sm">
           <p className="font-semibold">{t("product.shippingTitle")}</p>
           <p className="mt-2">
             {t("product.freeShipping", {

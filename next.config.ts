@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
       { protocol: "https", hostname: "placehold.co", pathname: "/**" },
+      { protocol: "https", hostname: "shendetperdite.com", pathname: "/**" },
       {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com",

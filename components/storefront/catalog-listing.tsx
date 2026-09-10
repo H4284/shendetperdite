@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cn } from "cn";
 import { Breadcrumbs, type Crumb } from "@/components/storefront/breadcrumbs";
+import { CatalogImage } from "@/components/storefront/catalog-image";
 import { Pagination } from "@/components/storefront/pagination";
 import { ProductGrid } from "@/components/storefront/product-grid";
 import type { Product } from "@/types/catalog";
@@ -16,6 +17,7 @@ export function CatalogListing({
   pageSize,
   total,
   basePath,
+  image,
 }: {
   title: string;
   description?: string;
@@ -27,10 +29,22 @@ export function CatalogListing({
   pageSize: number;
   total: number;
   basePath: string;
+  image?: string | null;
 }) {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-8">
       <Breadcrumbs items={crumbs} />
+      {image ? (
+        <div className="relative h-40 overflow-hidden rounded-2xl md:h-56">
+          <CatalogImage
+            src={image}
+            alt={title}
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+      ) : null}
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
         {description ? (
