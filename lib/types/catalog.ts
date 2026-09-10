@@ -1,24 +1,32 @@
-/** Placeholder catalog types. The real data model lands in EPIC 2. */
+export type {
+  Brand,
+  CatalogImage,
+  Category,
+  CategoryTreeNode,
+  ListProductsInput,
+  ListProductsResult,
+  Product,
+  ProductOption,
+  ProductSort,
+  ProductStatus,
+  ProductUnit,
+  ProductWithVariants,
+  Seo,
+  Variant,
+} from "@/types/catalog";
 
-export type Category = {
-  id: string;
-  slug: string;
-  name: string;
-  parentId: string | null;
-};
-
-export type Brand = {
-  id: string;
-  slug: string;
-  name: string;
-};
-
-export type Product = {
-  id: string;
-  slug: string;
-  name: string;
-  brandId: string;
-  categoryIds: string[];
-  price: number;
-  currency: "EUR";
-};
+export {
+  brandDocumentSchema,
+  brandSchema,
+  catalogImageSchema,
+  categoryDocumentSchema,
+  categorySchema,
+  productDocumentSchema,
+  productOptionSchema,
+  productSchema,
+  productStatusSchema,
+  productUnitSchema,
+  seoSchema,
+  variantDocumentSchema,
+  variantSchema,
+} from "@/types/catalog";

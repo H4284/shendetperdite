@@ -24,6 +24,7 @@ In another terminal:
 
 ```bash
 npm run seed
+npm run verify-catalog
 ```
 
 Emulator UI: [http://127.0.0.1:4000](http://127.0.0.1:4000).
@@ -34,5 +35,11 @@ Emulator UI: [http://127.0.0.1:4000](http://127.0.0.1:4000).
 - `npm run build` — production build
 - `npm run lint` — ESLint
 - `npm run format` — Prettier
-- `npm run dev:emulators` — Firestore, Auth, Storage emulators
-- `npm run seed` — insert placeholder catalog data into the emulator
+- `npm run lighthouse` — production Lighthouse audit
+- `npm run dev:emulators` — Firestore, Auth, Storage, Functions emulators
+- `npm run seed` — catalog data (13 categories, 10 brands, 20 products)
+- `npm run verify-catalog` — print catalog query results from the emulator
+- `npm run verify-trigger` — confirm a variant stock change updates `totalStock`
+- `npm test` — Zod schema unit tests
+- `npm run test:rules` — Firestore rules tests (emulator must be running)
+

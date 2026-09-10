@@ -50,3 +50,11 @@ epic1-*.png
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+/functions/node_modules
+
+# firestore
+firestore-debug.log*
+firestore-export.json
+firestore-hosting.json
+firestore-hosting.json.template*
