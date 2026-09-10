@@ -81,16 +81,3 @@ export function getAdminAppInstance() {
 export function getAdminDb() {
   return getFirestore(getAdminApp());
 }
-
-export function getAdminAuth() {
-  // Lazy-load so catalog RSC pages do not bundle firebase-admin/auth
-  // (jose/jwks-rsa ESM crash on Vercel + Turbopack).
-  const { getAuth } = require("firebase-admin/auth") as typeof import("firebase-admin/auth");
-  return getAuth(getAdminApp());
-}
-
-export function getAdminStorage() {
-  const { getStorage } =
-    require("firebase-admin/storage") as typeof import("firebase-admin/storage");
-  return getStorage(getAdminApp());
-}
