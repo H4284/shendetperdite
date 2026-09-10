@@ -2,12 +2,14 @@ import { revalidateTag, unstable_cache } from "next/cache";
 import {
   fetchBestSellers,
   fetchBrandBySlug,
+  fetchBrands,
   fetchCategoryBySlug,
   fetchCategoryTree,
   fetchNewProducts,
   fetchProductBySlug,
   fetchProducts,
   fetchRelatedProducts,
+  fetchSaleProducts,
   fetchSearchProducts,
 } from "@/lib/catalog/queries";
 import type { ListProductsInput, Product } from "@/types/catalog";
@@ -93,5 +95,17 @@ export const getBestSellers = unstable_cache(
 export const getNewProducts = unstable_cache(
   fetchNewProducts,
   ["catalog-new-products"],
+  { tags: [PRODUCTS_TAG] },
+);
+
+export const getBrands = unstable_cache(
+  fetchBrands,
+  ["catalog-brands"],
+  { tags: [PRODUCTS_TAG] },
+);
+
+export const getSaleProducts = unstable_cache(
+  fetchSaleProducts,
+  ["catalog-sale-products"],
   { tags: [PRODUCTS_TAG] },
 );

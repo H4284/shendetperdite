@@ -1,0 +1,29 @@
+[
+  {
+    "id": "vitamins",
+    "title": "Vitamina për çdo ditë",
+    "subtitle": "Formula të certifikuara për energji, imunitet dhe ekuilibër.",
+    "cta": "Shiko vitaminat",
+    "href": "/categories/vitamina-minerale",
+    "image": "https://placehold.co/1600x700/0f766e/ffffff.png",
+    "alt": "Vitamina dhe minerale"
+  },
+  {
+    "id": "fitness",
+    "title": "Proteina dhe performancë",
+    "subtitle": "Whey, kreatinë dhe BCAA për stërvitjen tuaj.",
+    "cta": "Shiko Fitness",
+    "href": "/categories/fitness",
+    "image": "https://placehold.co/1600x700/134e4a/ffffff.png",
+    "alt": "Produkte fitness"
+  },
+  {
+    "id": "brands",
+    "title": "Markat që i besojmë",
+    "subtitle": "NOW Foods, Proteinocean, Vitabiotics dhe më shumë.",
+    "cta": "Zbulo markat",
+    "href": "/brands/now-foods",
+    "image": "https://placehold.co/1600x700/111827/ffffff.png",
+    "alt": "Brendet e besuara"
+  }
+]

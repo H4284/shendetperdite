@@ -109,6 +109,17 @@ export async function fetchCategoryBySlug(
   return doc ? parseCategory(doc.id, doc.data()) : null;
 }
 
+export async function fetchBrands(): Promise<Brand[]> {
+  const snapshot = await db()
+    .collection("brands")
+    .where("isActive", "==", true)
+    .get();
+
+  return snapshot.docs
+    .map((doc) => parseBrand(doc.id, doc.data()))
+    .sort((a, b) => a.name.localeCompare(b.name, "sq"));
+}
+
 export async function fetchBrandBySlug(slug: string): Promise<Brand | null> {
   const snapshot = await db()
     .collection("brands")
@@ -231,6 +242,47 @@ export async function fetchNewProducts(): Promise<Product[]> {
     .get();
 
   return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data()));
+}
+
+export async function fetchSaleProducts(): Promise<Product[]> {
+  const snapshot = await db()
+    .collection("products")
+    .where("status", "==", "active")
+    .orderBy("createdAt", "desc")
+    .limit(48)
+    .get();
+
+  return snapshot.docs
+    .map((doc) => parseProduct(doc.id, doc.data()))
+    .filter(
+      (product) =>
+        product.compareAtPrice != null && product.compareAtPrice > product.minPrice,
+    )
+    .slice(0, 12);
+}
+
+export async function fetchActiveCategorySlugs(): Promise<string[]> {
+  const snapshot = await db()
+    .collection("categories")
+    .where("isActive", "==", true)
+    .get();
+  return snapshot.docs.map((doc) => String(doc.data().slug));
+}
+
+export async function fetchActiveBrandSlugs(): Promise<string[]> {
+  const snapshot = await db()
+    .collection("brands")
+    .where("isActive", "==", true)
+    .get();
+  return snapshot.docs.map((doc) => String(doc.data().slug));
+}
+
+export async function fetchActiveProductSlugs(): Promise<string[]> {
+  const snapshot = await db()
+    .collection("products")
+    .where("status", "==", "active")
+    .get();
+  return snapshot.docs.map((doc) => String(doc.data().slug));
 }
 
 export async function recomputeProductAggregates(productId: string) {

@@ -3,6 +3,7 @@ import { buildSearchTokens } from "../lib/catalog/search-tokens";
 import type { Brand, Category, Product, Variant } from "../types/catalog";
 
 const IMAGE = "https://placehold.co/800x800/0f766e/ffffff.png";
+const IMAGE_HOVER = "https://placehold.co/800x800/115e59/d1fae5.png";
 const LOGO = "https://placehold.co/240x80/111111/ffffff.png";
 
 const now = new Date("2026-09-01T10:00:00.000Z");
@@ -191,7 +192,10 @@ type SeedProduct = Omit<Product, "createdAt" | "updatedAt" | "searchTokens" | "m
 };
 
 function image(alt: string) {
-  return [{ url: IMAGE, alt, order: 0 }];
+  return [
+    { url: IMAGE, alt, order: 0 },
+    { url: IMAGE_HOVER, alt, order: 1 },
+  ];
 }
 
 const seedProductDrafts: SeedProduct[] = [
@@ -206,7 +210,7 @@ const seedProductDrafts: SeedProduct[] = [
     images: image("Proteinocean Whey Protein"),
     options: [
       { name: "Shija", values: ["Cookie & Cream", "Biscuit"] },
-      { name: "Masa", values: ["400g", "1600g"] },
+      { name: "Masa", values: ["400g", "1600g", "2000g"] },
     ],
     basePrice: 22,
     compareAtPrice: 30,
@@ -358,7 +362,7 @@ const simpleProducts: Array<{
   { id: "dietmed-omega", name: "Dietmed Omega Complex", brandId: "dietmed", categoryIds: ["vitamina-minerale", "shendeti"], price: 19, compareAtPrice: 25, sku: "DM-OMG-60", stockQty: 13, shortDescription: "Kompleks omega natyral.", relatedProductIds: ["now-foods-ultra-omega-3"] },
   { id: "solepharma-calcium", name: "Solepharma Calcium + D3", brandId: "solepharma", categoryIds: ["vitamina-minerale"], price: 16, compareAtPrice: null, sku: "SP-CAL-60", stockQty: 18, shortDescription: "Kalcium me vitaminë D3.", relatedProductIds: ["now-foods-magnesium-glycinate"] },
   { id: "opko-vitamin-c", name: "OPKO Vitamin C 1000", brandId: "opko", categoryIds: ["vitamina-minerale"], price: 9, compareAtPrice: 12, isNew: true, sku: "OP-VC-30", stockQty: 50, shortDescription: "Vitaminë C për imunitet.", relatedProductIds: ["sambucol-immune"] },
-  { id: "abdi-ibrahim-zinc", name: "Abdi Ibrahim Zinc", brandId: "abdi-ibrahim", categoryIds: ["vitamina-minerale"], price: 11, compareAtPrice: null, sku: "AI-ZN-30", stockQty: 27, shortDescription: "Zink për imunitet dhe lëkurë.", relatedProductIds: ["opko-vitamin-c"] },
+  { id: "abdi-ibrahim-zinc", name: "Abdi Ibrahim Zinc", brandId: "abdi-ibrahim", categoryIds: ["vitamina-minerale"], price: 11, compareAtPrice: null, sku: "AI-ZN-30", stockQty: 0, shortDescription: "Zink për imunitet dhe lëkurë.", relatedProductIds: ["opko-vitamin-c"] },
   { id: "nowsports-pre-workout", name: "NowSports Pre-Workout", brandId: "nowsports", categoryIds: ["fitness", "kreatine-performance"], price: 32, compareAtPrice: 39, sku: "NS-PRE-400", stockQty: 11, shortDescription: "Pre-workout për energji.", relatedProductIds: ["nowsports-micronized-creatine"] },
   { id: "proteinocean-l-carnitine", name: "Proteinocean L-Carnitine", brandId: "proteinocean", categoryIds: ["fitness", "menaxhim-peshe"], price: 15, compareAtPrice: 25, sku: "PO-LCAR-20", stockQty: 24, shortDescription: "L-Carnitine për energji dhe peshë.", relatedProductIds: ["proteinocean-bcaa"] },
   { id: "now-foods-probiotic", name: "Now Foods Probiotic-10", brandId: "now-foods", categoryIds: ["shendeti", "shendeti-i-tretjes"], price: 27, compareAtPrice: null, isNew: true, sku: "NF-PRO-50", stockQty: 16, shortDescription: "Probiotikë për tretjen.", relatedProductIds: ["now-foods-magnesium-glycinate"] },

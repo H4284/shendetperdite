@@ -69,7 +69,7 @@ export function CookieConsent() {
             <p className="max-w-3xl text-sm text-muted-foreground">
               {t("cookie.body")}{" "}
               <Link
-                href="/politika-e-privatesise"
+                href="/privacy"
                 className="text-foreground underline underline-offset-4"
               >
                 {t("cookie.privacy")}

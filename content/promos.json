@@ -1,0 +1,20 @@
+[
+  {
+    "id": "now-foods",
+    "title": "NOW Foods",
+    "body": "Vitamina, minerale dhe omega nga një markë e njohur botërisht.",
+    "cta": "Shiko NOW Foods",
+    "href": "/brands/now-foods",
+    "image": "https://placehold.co/900x600/0f172a/ffffff.png",
+    "alt": "NOW Foods"
+  },
+  {
+    "id": "proteinocean",
+    "title": "Proteinocean",
+    "body": "Proteina, gainer dhe aminoacide për rezultate të dukshme.",
+    "cta": "Shiko Proteinocean",
+    "href": "/brands/proteinocean",
+    "image": "https://placehold.co/900x600/115e59/ffffff.png",
+    "alt": "Proteinocean"
+  }
+]

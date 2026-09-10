@@ -75,12 +75,13 @@ export const siteConfig = {
     },
   ] satisfies NavItem[],
   footerLinks: [
-    { name: "Rreth Nesh", href: "/rreth-nesh" },
-    { name: "Dërgesat", href: "/politika-e-dergesave" },
-    { name: "Kthimet", href: "/politika-e-kthimit" },
-    { name: "Politika e Privatësisë", href: "/politika-e-privatesise" },
-    { name: "Termet dhe Kushtet", href: "/termet-e-pergjitshme" },
+    { name: "Rreth Nesh", href: "/about" },
+    { name: "Dërgesat", href: "/shipping" },
+    { name: "Kthimet", href: "/returns" },
+    { name: "Politika e Privatësisë", href: "/privacy" },
+    { name: "Termet dhe Kushtet", href: "/terms" },
   ],
+  freeShippingFrom: 50,
 } as const;
 
 export function findNavBySlug(slug: string) {

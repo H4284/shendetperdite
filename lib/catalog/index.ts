@@ -1,25 +1,32 @@
 export {
   getBestSellers,
   getBrandBySlug,
+  getBrands,
   getCategoryBySlug,
   getCategoryTree,
   getNewProducts,
   getProductBySlug,
   getRelatedProducts,
+  getSaleProducts,
   listProducts,
   revalidateCatalog,
   searchProducts,
 } from "@/lib/catalog/cache";
 
 export {
+  fetchActiveBrandSlugs,
+  fetchActiveCategorySlugs,
+  fetchActiveProductSlugs,
   fetchBestSellers,
   fetchBrandBySlug,
+  fetchBrands,
   fetchCategoryBySlug,
   fetchCategoryTree,
   fetchNewProducts,
   fetchProductBySlug,
   fetchProducts,
   fetchRelatedProducts,
+  fetchSaleProducts,
   fetchSearchProducts,
   recomputeProductAggregates,
 } from "@/lib/catalog/queries";

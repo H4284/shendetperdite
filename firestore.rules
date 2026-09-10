@@ -25,5 +25,13 @@ service cloud.firestore {
         allow write: if isAdmin();
       }
     }
+
+    match /newsletter/{id} {
+      allow create: if request.resource.data.keys().hasOnly(["email", "createdAt"])
+        && request.resource.data.email is string
+        && request.resource.data.email.size() > 3
+        && request.resource.data.email.size() < 320;
+      allow read, update, delete: if isAdmin();
+    }
   }
 }
