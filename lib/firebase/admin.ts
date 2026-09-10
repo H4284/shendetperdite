@@ -5,9 +5,7 @@ import {
   type App,
   type ServiceAccount,
 } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
-import { getStorage } from "firebase-admin/storage";
 
 const projectId =
   process.env.FIREBASE_PROJECT_ID ??
@@ -85,9 +83,14 @@ export function getAdminDb() {
 }
 
 export function getAdminAuth() {
+  // Lazy-load so catalog RSC pages do not bundle firebase-admin/auth
+  // (jose/jwks-rsa ESM crash on Vercel + Turbopack).
+  const { getAuth } = require("firebase-admin/auth") as typeof import("firebase-admin/auth");
   return getAuth(getAdminApp());
 }
 
 export function getAdminStorage() {
+  const { getStorage } =
+    require("firebase-admin/storage") as typeof import("firebase-admin/storage");
   return getStorage(getAdminApp());
 }

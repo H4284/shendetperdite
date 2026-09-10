@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: [
+    "firebase-admin",
+    "@google-cloud/firestore",
+    "jose",
+    "jwks-rsa",
+  ],
   experimental: {
     optimizePackageImports: ["lucide-react"],
   },
