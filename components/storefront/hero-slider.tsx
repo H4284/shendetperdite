@@ -20,7 +20,7 @@ export type HeroSlide = {
   href: string;
   image: string;
   alt: string;
-  textColor?: "light" | "dark";
+  textColor?: string;
 };
 
 export function HeroSlider({ slides }: { slides: HeroSlide[] }) {
