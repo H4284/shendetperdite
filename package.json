@@ -6,6 +6,8 @@
     "dev": "next dev --turbopack",
     "dev:emulators": "firebase emulators:start --only auth,firestore,storage,functions",
     "seed": "tsx scripts/seed.ts",
+    "seed:prod": "tsx scripts/seed.ts --prod",
+    "firebase:deploy-firestore": "firebase deploy --only firestore:rules,firestore:indexes --project shendetperdite-8d758",
     "verify-catalog": "tsx scripts/verify-catalog.ts",
     "verify-trigger": "tsx scripts/check-variant-trigger.ts",
     "test": "vitest run tests/catalog-schema.test.ts",

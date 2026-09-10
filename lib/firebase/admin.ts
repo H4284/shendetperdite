@@ -15,11 +15,34 @@ const projectId =
   "demo-shendetperdite";
 
 function usingEmulators() {
+  if (process.env.VERCEL || process.env.NODE_ENV === "production") {
+    return false;
+  }
   return Boolean(
     process.env.FIRESTORE_EMULATOR_HOST ||
       process.env.FIREBASE_AUTH_EMULATOR_HOST ||
       process.env.FIREBASE_STORAGE_EMULATOR_HOST,
   );
+}
+
+function normalizePrivateKey(raw: string) {
+  let key = raw.trim().replace(/^\uFEFF/, "");
+  if (
+    (key.startsWith('"') && key.endsWith('"')) ||
+    (key.startsWith("'") && key.endsWith("'"))
+  ) {
+    key = key.slice(1, -1);
+  }
+  if (key.startsWith("{")) {
+    const parsed = JSON.parse(key) as { private_key?: string };
+    if (parsed.private_key) key = parsed.private_key;
+  }
+  key = key.replace(/\\n/g, "\n").trim();
+  if (!key.includes("BEGIN ") && key.includes("END PRIVATE KEY")) {
+    key = `-----BEGIN PRIVATE KEY-----\n${key}`;
+  }
+  if (!key.endsWith("\n")) key += "\n";
+  return key;
 }
 
 function getAdminApp(): App {
@@ -30,11 +53,10 @@ function getAdminApp(): App {
     return initializeApp({ projectId });
   }
 
-  const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
-  const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(
-    /\\n/g,
-    "\n",
-  );
+  const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL?.trim();
+  const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY
+    ? normalizePrivateKey(process.env.FIREBASE_ADMIN_PRIVATE_KEY)
+    : undefined;
 
   if (clientEmail && privateKey) {
     const serviceAccount: ServiceAccount = {

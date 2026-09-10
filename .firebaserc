@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "demo-shendetperdite"
+    "default": "demo-shendetperdite",
+    "prod": "shendetperdite-8d758"
   }
 }

@@ -1,9 +1,5 @@
-process.env.FIRESTORE_EMULATOR_HOST ||= "127.0.0.1:8080";
-process.env.FIREBASE_AUTH_EMULATOR_HOST ||= "127.0.0.1:9099";
-process.env.FIREBASE_STORAGE_EMULATOR_HOST ||= "127.0.0.1:9199";
-process.env.FIREBASE_PROJECT_ID ||= "demo-shendetperdite";
-
 import type { Firestore } from "firebase-admin/firestore";
+import { loadEnvFile } from "./load-env";
 import {
   brandSchema,
   categorySchema,
@@ -11,6 +7,25 @@ import {
   variantSchema,
 } from "../types/catalog";
 import { seedBrands, seedCategories, seedProducts } from "./seed-data";
+
+const PRODUCTION_PROJECT_ID = "shendetperdite-8d758";
+const isProd = process.argv.includes("--prod");
+
+loadEnvFile(".env.local");
+
+if (isProd) {
+  delete process.env.FIRESTORE_EMULATOR_HOST;
+  delete process.env.FIREBASE_AUTH_EMULATOR_HOST;
+  delete process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+  process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS = "false";
+  process.env.FIREBASE_PROJECT_ID = PRODUCTION_PROJECT_ID;
+  process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = PRODUCTION_PROJECT_ID;
+} else {
+  process.env.FIRESTORE_EMULATOR_HOST ||= "127.0.0.1:8080";
+  process.env.FIREBASE_AUTH_EMULATOR_HOST ||= "127.0.0.1:9099";
+  process.env.FIREBASE_STORAGE_EMULATOR_HOST ||= "127.0.0.1:9199";
+  process.env.FIREBASE_PROJECT_ID ||= "demo-shendetperdite";
+}
 
 async function clearCollection(
   db: Firestore,
@@ -28,6 +43,17 @@ async function clearCollection(
 }
 
 async function seed() {
+  if (isProd) {
+    const email = process.env.FIREBASE_ADMIN_CLIENT_EMAIL?.trim();
+    const key = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.trim();
+    if (!email || !key) {
+      throw new Error(
+        "Production seed needs FIREBASE_ADMIN_CLIENT_EMAIL and FIREBASE_ADMIN_PRIVATE_KEY in .env.local (from Firebase Console → Project settings → Service accounts → Generate new private key).",
+      );
+    }
+    console.log(`Seeding production Firestore project ${PRODUCTION_PROJECT_ID}...`);
+  }
+
   const { getAdminDb } = await import("../lib/firebase/admin");
   const db = getAdminDb();
 
@@ -66,11 +92,16 @@ async function seed() {
 
   const twoAxis = seedProducts.filter(({ product }) => product.options.length === 2);
   console.log(
-    `Seeded ${seedCategories.length} categories, ${seedBrands.length} brands, ${seedProducts.length} products (${twoAxis.length} with 2 option axes).`,
+    `Seeded ${seedCategories.length} categories, ${seedBrands.length} brands, ${seedProducts.length} products (${twoAxis.length} with 2 option axes) into ${isProd ? PRODUCTION_PROJECT_ID : "the emulator"}.`,
   );
 }
 
 seed().catch((error) => {
-  console.error("Seed failed. Is the Firebase emulator running?", error);
+  console.error(
+    isProd
+      ? "Production seed failed. Check Admin credentials, that Firestore is created in native mode, and that Vercel does not use emulator host env vars."
+      : "Seed failed. Is the Firebase emulator running?",
+    error,
+  );
   process.exit(1);
 });
