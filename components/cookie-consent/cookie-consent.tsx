@@ -12,15 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  CONSENT_KEY,
+  PREFS_KEY,
+  writeCookieConsent,
+  type CookiePrefs,
+} from "@/lib/analytics/consent";
 import { t } from "@/lib/i18n/sq";
-
-const CONSENT_KEY = "sp-cookie-consent";
-const PREFS_KEY = "sp-cookie-preferences";
-
-type CookiePrefs = {
-  necessary: true;
-  analytics: boolean;
-};
 
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
@@ -42,14 +40,17 @@ export function CookieConsent() {
   }, []);
 
   function persist(prefs: CookiePrefs) {
-    window.localStorage.setItem(CONSENT_KEY, "accepted");
-    window.localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+    writeCookieConsent(prefs);
     setVisible(false);
     setSettingsOpen(false);
   }
 
   function acceptAll() {
     persist({ necessary: true, analytics: true });
+  }
+
+  function declineAnalytics() {
+    persist({ necessary: true, analytics: false });
   }
 
   function saveSettings() {
@@ -76,10 +77,10 @@ export function CookieConsent() {
               </Link>
             </p>
             <div className="flex shrink-0 flex-wrap gap-2">
-              <Button
-                variant="outline"
-                onClick={() => setSettingsOpen(true)}
-              >
+              <Button variant="outline" onClick={declineAnalytics}>
+                {t("cookie.necessary")}
+              </Button>
+              <Button variant="outline" onClick={() => setSettingsOpen(true)}>
                 {t("cookie.settings")}
               </Button>
               <Button onClick={acceptAll}>{t("cookie.accept")}</Button>
@@ -107,7 +108,7 @@ export function CookieConsent() {
             <label className="flex items-start gap-3 text-sm">
               <Checkbox
                 checked={analytics}
-                onCheckedChange={(checked) => setAnalytics(checked)}
+                onCheckedChange={(checked) => setAnalytics(checked === true)}
                 aria-label={t("cookie.analytics")}
               />
               <span>

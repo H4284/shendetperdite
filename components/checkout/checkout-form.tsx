@@ -8,9 +8,11 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { BeginCheckoutTracker } from "@/components/analytics/begin-checkout-tracker";
 import { OrderSummary } from "@/components/checkout/order-summary";
 import { KOSOVO_CITIES } from "@/data/kosovo-cities";
 import { formatEuroAmount } from "@/lib/cart/money";
+import { cartTotal } from "@/lib/cart/selectors";
 import { placeOrder, OutOfStockClientError } from "@/lib/checkout/client";
 import {
   checkoutSchema,
@@ -135,6 +137,7 @@ export function CheckoutForm({
     shippingMethods.find((method) => method.id === values.shippingMethodId) ??
     shippingMethods[0] ??
     defaultShippingMethods[0];
+  const checkoutValue = cartTotal(items, discount);
 
   useEffect(() => {
     try {
@@ -207,6 +210,7 @@ export function CheckoutForm({
       onSubmit={handleSubmit(onSubmit)}
       className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem]"
     >
+      <BeginCheckoutTracker items={items} value={checkoutValue} />
       <div className="space-y-8">
         <section className="space-y-4 rounded-2xl border p-5">
           <h2 className="text-lg font-semibold">{t("checkout.contact")}</h2>

@@ -11,6 +11,7 @@ import { GoogleButton } from "@/components/auth/google-button";
 import { registerSchema, type RegisterInput } from "@/lib/auth/schema";
 import { authErrorMessage, firebaseErrorCode } from "@/lib/auth/errors";
 import { loginWithGoogle, registerWithEmail } from "@/lib/auth/client";
+import { track } from "@/lib/analytics";
 import { t } from "@/lib/i18n/sq";
 
 export function RegisterForm() {
@@ -32,6 +33,7 @@ export function RegisterForm() {
     }
     try {
       await registerWithEmail(parsed.data);
+      track("sign_up");
       toast.success(t("auth.verifySent"));
       router.replace("/account");
       router.refresh();

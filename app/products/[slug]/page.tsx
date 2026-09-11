@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/storefront/breadcrumbs";
 import { ProductCarousel } from "@/components/storefront/product-carousel";
 import { ProductDetails } from "@/components/storefront/product-details";
+import { ProductViewTracker } from "@/components/analytics/product-view-tracker";
+import { BreadcrumbJsonLd } from "@/components/seo/json-ld";
 import { ProductJsonLd } from "@/components/storefront/product-json-ld";
 import { siteConfig } from "@/config/site";
 import {
@@ -16,6 +18,7 @@ import {
 import { categoryMap, productCategoryPath } from "@/lib/catalog/tree";
 import { variantLabel } from "@/lib/format";
 import { Markdown } from "@/lib/markdown";
+import { absoluteUrl } from "@/lib/seo/site-url";
 import { t } from "@/lib/i18n/sq";
 
 export const revalidate = 3600;
@@ -55,10 +58,19 @@ export async function generateMetadata({
   return {
     title: { absolute: `${title} | ${siteConfig.name}` },
     description: product.shortDescription,
+    alternates: { canonical: absoluteUrl(`/products/${product.slug}`) },
     openGraph: {
       title,
       description: product.shortDescription,
+      url: absoluteUrl(`/products/${product.slug}`),
       images: image ? [{ url: image.url, alt: image.alt }] : undefined,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: product.shortDescription,
+      images: image ? [image.url] : undefined,
     },
   };
 }
@@ -85,18 +97,25 @@ export default async function ProductPage({ params, searchParams }: Props) {
     .map((id) => byId.get(id))
     .filter((entry): entry is NonNullable<typeof entry> => Boolean(entry));
 
+  const crumbs = [
+    ...categoryPath.map((entry) => ({
+      name: entry.name,
+      href: `/categories/${entry.slug}`,
+    })),
+    { name: product.name },
+  ];
+
   return (
     <div className="mx-auto max-w-7xl space-y-12 px-4 py-8">
       <ProductJsonLd product={product} brand={brand} />
-      <Breadcrumbs
-        items={[
-          ...categoryPath.map((entry) => ({
-            name: entry.name,
-            href: `/categories/${entry.slug}`,
-          })),
-          { name: product.name },
-        ]}
+      <BreadcrumbJsonLd items={crumbs} />
+      <ProductViewTracker
+        id={product.id}
+        name={product.name}
+        brand={brand?.name}
+        price={product.minPrice}
       />
+      <Breadcrumbs items={crumbs} />
       <ProductDetails
         product={product}
         brandName={brand?.name ?? ""}

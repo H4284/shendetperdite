@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, feature/**]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npm test
+      - run: npx tsc --noEmit
+
+  e2e:
+    runs-on: ubuntu-latest
+    needs: unit
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --legacy-peer-deps
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_FIREBASE_API_KEY: demo-api-key
+          NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: demo.firebaseapp.com
+          NEXT_PUBLIC_FIREBASE_PROJECT_ID: demo-shendetperdite
+          NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: demo.appspot.com
+          NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: "0"
+          NEXT_PUBLIC_FIREBASE_APP_ID: demo-app-id
+          NEXT_PUBLIC_USE_FIREBASE_EMULATORS: "false"
+          FIREBASE_PROJECT_ID: demo-shendetperdite
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000
+      - run: npx playwright test e2e/golden-path.spec.ts --grep "sitemap"
+        env:
+          PLAYWRIGHT_BASE_URL: ""
+          NEXT_PUBLIC_SITE_URL: http://127.0.0.1:3000

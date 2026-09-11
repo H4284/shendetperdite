@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ObfuscatedEmail } from "@/components/footer/obfuscated-email";
 import { siteConfig } from "@/config/site";
 import { getStoreSettings } from "@/lib/settings/store";
 import { t } from "@/lib/i18n/sq";
@@ -20,9 +21,7 @@ export async function Footer() {
             {siteConfig.description}
           </p>
           <div className="mt-4 flex flex-col gap-1 text-sm text-muted-foreground">
-            <a href={`mailto:${company.email}`} className="hover:text-foreground">
-              {company.email}
-            </a>
+            <ObfuscatedEmail email={company.email} />
             <a href={phoneHref} className="hover:text-foreground">
               {company.phone}
             </a>

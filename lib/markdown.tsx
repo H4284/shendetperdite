@@ -1,7 +1,11 @@
 import { cn } from "cn";
 
+export function stripHtml(input: string) {
+  return input.replace(/<[^>]*>/g, "");
+}
+
 function renderInline(text: string, keyPrefix: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  const parts = stripHtml(text).split(/(\*\*[^*]+\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return <strong key={`${keyPrefix}-${index}`}>{part.slice(2, -2)}</strong>;

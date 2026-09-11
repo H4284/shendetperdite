@@ -2,6 +2,7 @@
 
 import { toast } from "sonner";
 import { cartRequestItemSchema, type CartRequestItem } from "@/types/cart";
+import { track } from "@/lib/analytics";
 import { useCartStore } from "@/lib/cart/store";
 import { cartSubtotal } from "@/lib/cart/selectors";
 import { t } from "@/lib/i18n/sq";
@@ -97,10 +98,26 @@ export async function addToCart(input: CartRequestItem) {
   useCartStore.getState().replaceItems(result.items);
   useCartStore.getState().setDrawerOpen(true);
   toastClamped(result.clamped);
-  if (!result.items.some((item) => item.variantId === parsed.variantId)) {
+  const added = result.items.find((item) => item.variantId === parsed.variantId);
+  if (!added) {
     toast.error(t("catalog.outOfStock"));
   } else if (!result.clamped.some((entry) => entry.variantId === parsed.variantId)) {
     toast.success(t("product.addedToCart"));
+    track("add_to_cart", {
+      value: added.price * added.qty,
+      currency: "EUR",
+      items: [
+        {
+          item_id: added.variantId,
+          item_name: added.name,
+          item_variant: added.variantLabel,
+          price: added.price,
+          quantity: added.qty,
+        },
+      ],
+      content_ids: [added.variantId],
+      num_items: added.qty,
+    });
   }
   await refreshDiscount();
   await writeCartToAccount();

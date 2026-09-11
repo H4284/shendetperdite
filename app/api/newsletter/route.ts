@@ -1,11 +1,17 @@
 import { z } from "zod";
 import { getAdminDb } from "@/lib/firebase/admin";
+import { clientIp, rateLimit } from "@/lib/auth/rate-limit";
 
 const bodySchema = z.object({
   email: z.string().email(),
 });
 
 export async function POST(request: Request) {
+  const limited = rateLimit(`newsletter:${clientIp(request)}`, 10, 60_000);
+  if (!limited.ok) {
+    return Response.json({ ok: false, error: "rate_limited" }, { status: 429 });
+  }
+
   try {
     const json = await request.json();
     const { email } = bodySchema.parse(json);

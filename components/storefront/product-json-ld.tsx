@@ -1,4 +1,5 @@
 import { siteConfig } from "@/config/site";
+import { absoluteUrl } from "@/lib/seo/site-url";
 import type { Brand, ProductWithVariants } from "@/types/catalog";
 
 export function ProductJsonLd({
@@ -30,7 +31,9 @@ export function ProductJsonLd({
         variant.stockQty > 0
           ? "https://schema.org/InStock"
           : "https://schema.org/OutOfStock",
-      url: `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://shendetperdite.com"}/products/${product.slug}?variant=${encodeURIComponent(variant.sku)}`,
+      url: absoluteUrl(
+        `/products/${product.slug}?variant=${encodeURIComponent(variant.sku)}`,
+      ),
       seller: {
         "@type": "Organization",
         name: siteConfig.name,

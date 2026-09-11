@@ -11,6 +11,7 @@ import {
   listProducts,
 } from "@/lib/catalog";
 import { categoryMap, categoryPath } from "@/lib/catalog/tree";
+import { absoluteUrl } from "@/lib/seo/site-url";
 import type { Category, ListProductsResult } from "@/types/catalog";
 
 export const revalidate = 3600;
@@ -68,6 +69,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: category.seo.title,
       description: category.seo.description,
+      alternates: { canonical: absoluteUrl(`/categories/${category.slug}`) },
+      openGraph: {
+        title: category.seo.title,
+        description: category.seo.description,
+        url: absoluteUrl(`/categories/${category.slug}`),
+        images: category.image ? [{ url: category.image }] : undefined,
+      },
     };
   } catch {
     return { title: slug };

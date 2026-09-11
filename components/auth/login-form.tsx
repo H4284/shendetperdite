@@ -11,6 +11,7 @@ import { GoogleButton } from "@/components/auth/google-button";
 import { loginSchema, type LoginInput } from "@/lib/auth/schema";
 import { authErrorMessage, firebaseErrorCode } from "@/lib/auth/errors";
 import { loginWithEmail, loginWithGoogle } from "@/lib/auth/client";
+import { track } from "@/lib/analytics";
 import { safeNextPath } from "@/lib/auth/paths";
 import { t } from "@/lib/i18n/sq";
 import Link from "next/link";
@@ -36,6 +37,7 @@ export function LoginForm() {
     }
     try {
       await loginWithEmail(parsed.data.email, parsed.data.password);
+      track("login");
       router.replace(next);
       router.refresh();
     } catch (error) {
@@ -47,6 +49,7 @@ export function LoginForm() {
     setGoogleBusy(true);
     try {
       await loginWithGoogle();
+      track("login");
       router.replace(next);
       router.refresh();
     } catch (error) {

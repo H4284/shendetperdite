@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { getAdminDb } from "@/lib/firebase/admin";
+import { clientIp, rateLimit } from "@/lib/auth/rate-limit";
 import { attachCustomerAccount, uidFromAuthorization } from "@/lib/checkout/account";
 import { saveCustomerAddress, subscribeNewsletter } from "@/lib/checkout/after-order";
 import {
@@ -21,6 +22,11 @@ const bodySchema = z.object({
 });
 
 export async function POST(request: Request) {
+  const limited = rateLimit(`orders:${clientIp(request)}`, 10, 60_000);
+  if (!limited.ok) {
+    return Response.json({ error: "rate_limited" }, { status: 429 });
+  }
+
   const db = getAdminDb();
   let parsedItems: z.infer<typeof bodySchema>["items"] = [];
 
