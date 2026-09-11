@@ -24,15 +24,15 @@ export function authErrorMessage(code: string | undefined) {
     case "auth/invalid-action-code":
       return "Lidhja ka skaduar ose nuk është e vlefshme.";
     case "auth/unauthorized-domain":
-      return "Ky domain nuk është i lejuar. Shtoni localhost te Authentication → Settings → Authorized domains.";
+      return "Ky domain nuk është i lejuar. Shtojeni te Firebase Console → Authentication → Settings → Authorized domains.";
     case "auth/operation-not-allowed":
       return "Kjo metodë hyrjeje nuk është aktive në Firebase.";
     case "auth/invalid-api-key":
     case "auth/api-key-not-valid.-please-pass-a-valid-api-key.":
     case "auth/configuration-not-found":
-      return "Konfigurimi i Firebase në .env.local nuk përputhet me projektin e vërtetë.";
+      return "Konfigurimi i Firebase nuk përputhet me projektin e vërtetë.";
     case "session_failed":
-      return "Hyrja u bë, por sesioni nuk u ruajt. Kontrolloni NEXT_PUBLIC_FIREBASE_PROJECT_ID në .env.local (duhet të jetë shendetperdite-8d758) dhe rinisni npm run dev.";
+      return "Hyrja u bë, por sesioni nuk u ruajt. Provoni përsëri.";
     default:
       return "Nuk mundëm të përfundojmë këtë veprim. Provoni përsëri.";
   }
