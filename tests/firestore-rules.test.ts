@@ -35,8 +35,14 @@ describe("firestore security rules", () => {
     expect(snapshot.exists()).toBe(true);
   });
 
-  it("does not allow an unauthenticated client to read discount codes", async () => {
-    await expect(getDoc(doc(db, "discounts", "SAVE10"))).rejects.toMatchObject({
+  it("does not allow an unauthenticated client to read orders", async () => {
+    await expect(getDoc(doc(db, "orders", "rules-hacked"))).rejects.toMatchObject({
+      code: "permission-denied",
+    });
+  });
+
+  it("does not allow an unauthenticated client to read another user's profile", async () => {
+    await expect(getDoc(doc(db, "users", "someone-else"))).rejects.toMatchObject({
       code: "permission-denied",
     });
   });

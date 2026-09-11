@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { t } from "@/lib/i18n/sq";
+import { AccountMenu } from "@/components/header/account-menu";
 import { CartButton } from "@/components/header/cart-button";
 import { Logo } from "@/components/header/logo";
 import { MegaMenu } from "@/components/header/mega-menu";
@@ -18,6 +19,7 @@ export function Header() {
         <Logo />
         <SearchCommand />
         <div className="flex items-center gap-1">
+          <AccountMenu />
           <CartButton />
           <ThemeToggle />
         </div>

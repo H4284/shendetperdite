@@ -19,6 +19,12 @@ function usingEmulators() {
   return process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === "true";
 }
 
+if (!usingEmulators()) {
+  delete process.env.FIRESTORE_EMULATOR_HOST;
+  delete process.env.FIREBASE_AUTH_EMULATOR_HOST;
+  delete process.env.FIREBASE_STORAGE_EMULATOR_HOST;
+}
+
 function normalizePrivateKey(raw: string) {
   let key = raw.trim().replace(/^\uFEFF/, "");
   if (

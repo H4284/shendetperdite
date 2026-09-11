@@ -14,7 +14,7 @@
     "firebase:deploy-firestore": "firebase deploy --only firestore:rules,firestore:indexes --project shendetperdite-8d758",
     "verify-catalog": "tsx scripts/verify-catalog.ts",
     "verify-trigger": "tsx scripts/check-variant-trigger.ts",
-    "test": "vitest run tests/catalog-schema.test.ts tests/cart-selectors.test.ts tests/discount-validator.test.ts tests/checkout-schema.test.ts tests/checkout-totals.test.ts",
+    "test": "vitest run tests/catalog-schema.test.ts tests/cart-selectors.test.ts tests/discount-validator.test.ts tests/checkout-schema.test.ts tests/checkout-totals.test.ts tests/auth-schema.test.ts",
     "test:rules": "vitest run tests/firestore-rules.test.ts",
     "build": "next build",
     "start": "next start",

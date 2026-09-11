@@ -4,8 +4,6 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
 import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -20,7 +18,8 @@ import {
   type CheckoutInput,
 } from "@/lib/checkout/schema";
 import { defaultShippingMethods } from "@/lib/checkout/defaults";
-import { getFirebaseClient } from "@/lib/firebase/client";
+import { loadAddresses, loadProfile } from "@/lib/account/data";
+import { useAuthUser } from "@/lib/auth/use-user";
 import { t } from "@/lib/i18n/sq";
 import type { AppliedDiscount, CartItem } from "@/types/cart";
 import type { PaymentMethod, ShippingMethod } from "@/types/checkout";
@@ -131,6 +130,7 @@ export function CheckoutForm({
     formState: { errors, isSubmitting },
   } = form;
   const values = watch();
+  const { user } = useAuthUser();
   const shipping =
     shippingMethods.find((method) => method.id === values.shippingMethodId) ??
     shippingMethods[0] ??
@@ -145,26 +145,35 @@ export function CheckoutForm({
   }, [values]);
 
   useEffect(() => {
-    const { auth, db } = getFirebaseClient();
-    return onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
-      if (!getValues("email") && user.email) {
-        setValue("email", user.email);
-      }
+    if (!user) return;
+    if (!getValues("email") && user.email) {
+      setValue("email", user.email);
+    }
+    void (async () => {
       try {
-        const snap = await getDoc(doc(db, "users", user.uid, "addresses", "default"));
-        if (!snap.exists() || getValues("shipping.recipient")) return;
-        const data = snap.data() as Partial<CheckoutAddress>;
-        if (data.city) setValue("shipping.city", data.city);
-        if (data.recipient) setValue("shipping.recipient", data.recipient);
-        if (data.line1) setValue("shipping.line1", data.line1);
-        if (data.postalCode) setValue("shipping.postalCode", data.postalCode);
-        if (data.phone) setValue("shipping.phone", data.phone);
+        const [profile, addresses] = await Promise.all([
+          loadProfile(user.uid),
+          loadAddresses(user.uid),
+        ]);
+        const address =
+          addresses.find((entry) => entry.isDefault) ?? addresses[0];
+        if (!getValues("shipping.recipient")) {
+          const name = profile.displayName || user.displayName || "";
+          if (name) setValue("shipping.recipient", address?.recipient || name);
+          if (profile.phone) setValue("shipping.phone", profile.phone);
+        }
+        if (address && !getValues("shipping.line1")) {
+          setValue("shipping.city", address.city);
+          setValue("shipping.recipient", address.recipient);
+          setValue("shipping.line1", address.line1);
+          if (address.postalCode) setValue("shipping.postalCode", address.postalCode);
+          setValue("shipping.phone", address.phone);
+        }
       } catch {
-        // Address prefill is optional until EPIC 6 login is live.
+        // Prefill is best-effort if the profile docs are missing.
       }
-    });
-  }, [getValues, setValue]);
+    })();
+  }, [user, getValues, setValue]);
 
   async function onSubmit(data: CheckoutInput) {
     const parsed = checkoutSchema.safeParse(data);
@@ -204,24 +213,31 @@ export function CheckoutForm({
           <Field label={t("checkout.email")} error={errors.email?.message}>
             <Input className={inputClass} type="email" autoComplete="email" {...register("email")} />
           </Field>
-          <Controller
-            name="createAccount"
-            control={control}
-            render={({ field }) => (
-              <label className="flex items-center gap-2 text-sm">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={(checked) => field.onChange(checked === true)}
-                />
-                {t("checkout.createAccount")}
-              </label>
-            )}
-          />
-          <p className="text-sm">
-            <Link href="/login" className="text-primary underline-offset-4 hover:underline">
-              {t("checkout.hasAccount")}
-            </Link>
-          </p>
+          {user ? null : (
+            <>
+              <Controller
+                name="createAccount"
+                control={control}
+                render={({ field }) => (
+                  <label className="flex items-center gap-2 text-sm">
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(checked) => field.onChange(checked === true)}
+                    />
+                    {t("checkout.createAccount")}
+                  </label>
+                )}
+              />
+              <p className="text-sm">
+                <Link
+                  href="/login?next=/checkout"
+                  className="text-primary underline-offset-4 hover:underline"
+                >
+                  {t("checkout.hasAccount")}
+                </Link>
+              </p>
+            </>
+          )}
         </section>
 
         <section className="space-y-4 rounded-2xl border p-5">
