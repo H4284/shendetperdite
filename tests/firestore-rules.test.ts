@@ -34,6 +34,12 @@ describe("firestore security rules", () => {
     const snapshot = await getDoc(doc(db, "products", "proteinocean-whey-protein"));
     expect(snapshot.exists()).toBe(true);
   });
+
+  it("does not allow an unauthenticated client to read discount codes", async () => {
+    await expect(getDoc(doc(db, "discounts", "SAVE10"))).rejects.toMatchObject({
+      code: "permission-denied",
+    });
+  });
 });
 
 afterAll(async () => {

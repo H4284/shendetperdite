@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
 import { CatalogImage } from "@/components/storefront/catalog-image";
 import { Price } from "@/components/storefront/price";
 import { StockBadge } from "@/components/storefront/stock-badge";
@@ -65,6 +66,14 @@ export function ProductCard({
           />
         </div>
       </Link>
+      {product.defaultVariantId && product.totalStock > 0 ? (
+        <AddToCartButton
+          productId={product.id}
+          variantId={product.defaultVariantId}
+          size="sm"
+          className="mt-3 w-full"
+        />
+      ) : null}
     </article>
   );
 }

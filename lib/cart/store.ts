@@ -1,24 +1,64 @@
 "use client";
 
 import { create } from "zustand";
-
-/** Stub cart store. Real cart behavior is EPIC 4. */
-export type CartAddItemInput = {
-  productId: string;
-  variantId: string;
-  sku: string;
-  qty?: number;
-};
+import { persist } from "zustand/middleware";
+import type { AppliedDiscount, CartItem } from "@/types/cart";
 
 type CartState = {
-  itemCount: number;
-  addItem: (item: CartAddItemInput) => void;
+  items: CartItem[];
+  discountCode?: string;
+  discount: AppliedDiscount | null;
+  drawerOpen: boolean;
+  lastRemoved: CartItem | null;
+  replaceItems: (items: CartItem[]) => void;
+  setDiscount: (discount: AppliedDiscount | null, code?: string) => void;
+  clearDiscount: () => void;
+  setDrawerOpen: (open: boolean) => void;
+  removeLocal: (variantId: string) => CartItem | null;
+  restoreRemoved: () => void;
 };
 
-export const useCartStore = create<CartState>()((set) => ({
-  itemCount: 0,
-  addItem: (item) =>
-    set((state) => ({
-      itemCount: state.itemCount + Math.max(1, item.qty ?? 1),
-    })),
-}));
+export const useCartStore = create<CartState>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      discountCode: undefined,
+      discount: null,
+      drawerOpen: false,
+      lastRemoved: null,
+      replaceItems: (items) => set({ items }),
+      setDiscount: (discount, code) =>
+        set({
+          discount,
+          discountCode: discount ? (code ?? discount.code) : undefined,
+        }),
+      clearDiscount: () => set({ discount: null, discountCode: undefined }),
+      setDrawerOpen: (open) => set({ drawerOpen: open }),
+      removeLocal: (variantId) => {
+        const item = get().items.find((entry) => entry.variantId === variantId) ?? null;
+        set({
+          items: get().items.filter((entry) => entry.variantId !== variantId),
+          lastRemoved: item,
+        });
+        return item;
+      },
+      restoreRemoved: () => {
+        const item = get().lastRemoved;
+        if (!item) return;
+        const exists = get().items.some((entry) => entry.variantId === item.variantId);
+        set({
+          items: exists ? get().items : [...get().items, item],
+          lastRemoved: null,
+        });
+      },
+    }),
+    {
+      name: "cart_v1",
+      partialize: (state) => ({
+        items: state.items,
+        discountCode: state.discountCode,
+        discount: state.discount,
+      }),
+    },
+  ),
+);

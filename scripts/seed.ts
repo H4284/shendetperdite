@@ -6,7 +6,9 @@ import {
   productSchema,
   variantSchema,
 } from "../types/catalog";
+import { discountSchema } from "../types/discount";
 import { seedBrands, seedCategories, seedProducts } from "./seed-data";
+import { seedDiscounts } from "./seed-discount-data";
 
 const PRODUCTION_PROJECT_ID = "shendetperdite-8d758";
 const isProd = process.argv.includes("--prod");
@@ -91,9 +93,16 @@ async function seed() {
     }
   }
 
+  await clearCollection(db, "discounts");
+  for (const discount of seedDiscounts) {
+    discountSchema.parse(discount);
+    const { code, ...data } = discount;
+    await db.collection("discounts").doc(code).set(data);
+  }
+
   const twoAxis = seedProducts.filter(({ product }) => product.options.length === 2);
   console.log(
-    `Seeded ${seedCategories.length} categories, ${seedBrands.length} brands, ${seedProducts.length} products (${twoAxis.length} with 2 option axes) into ${isProd ? PRODUCTION_PROJECT_ID : "the emulator"}.`,
+    `Seeded ${seedCategories.length} categories, ${seedBrands.length} brands, ${seedProducts.length} products (${twoAxis.length} with 2 option axes), ${seedDiscounts.length} discounts into ${isProd ? PRODUCTION_PROJECT_ID : "the emulator"}.`,
   );
 }
 

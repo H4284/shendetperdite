@@ -2,14 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
 import { ProductGallery } from "@/components/storefront/product-gallery";
 import { Price } from "@/components/storefront/price";
 import { StockStatus } from "@/components/storefront/stock-badge";
 import { VariantSelector } from "@/components/storefront/variant-selector";
-import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
-import { useCartStore } from "@/lib/cart/store";
 import { formatPrice, formatUnitPrice, variantLabel } from "@/lib/format";
 import { t } from "@/lib/i18n/sq";
 import type { ProductWithVariants } from "@/types/catalog";
@@ -36,7 +34,6 @@ export function ProductDetails({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const addItem = useCartStore((state) => state.addItem);
   const [sku, setSku] = useState(
     findVariant(product, initialSku)?.sku ?? null,
   );
@@ -72,16 +69,6 @@ export function ProductDetails({
     );
     if (!match) return;
     setVariantSku(match.sku, next);
-  }
-
-  function onAddToCart() {
-    if (!variant || variant.stockQty <= 0) return;
-    addItem({
-      productId: product.id,
-      variantId: variant.id,
-      sku: variant.sku,
-    });
-    toast.success(t("product.addedToCart"));
   }
 
   const galleryImages = product.images.slice().sort((a, b) => a.order - b.order);
@@ -124,14 +111,12 @@ export function ProductDetails({
           selected={selected}
           onSelect={onSelect}
         />
-        <Button
-          size="lg"
-          className="h-11 w-full sm:w-auto"
+        <AddToCartButton
+          productId={product.id}
+          variantId={variant?.id}
           disabled={!variant || variant.stockQty <= 0}
-          onClick={onAddToCart}
-        >
-          {t("product.addToCart")}
-        </Button>
+          className="h-11 w-full sm:w-auto"
+        />
         <aside className="rounded-2xl border bg-primary/5 p-4 text-sm">
           <p className="font-semibold">{t("product.shippingTitle")}</p>
           <p className="mt-2">
