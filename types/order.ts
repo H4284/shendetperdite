@@ -16,4 +16,6 @@ export type StoredOrder = {
   paymentMethod: { id: string; name: string; type: string };
   shippingMethod: { id: string; name: string; eta?: string };
   newsletterOptIn: boolean;
+  createdAt?: Date | null;
+  timeline?: Array<{ status: string; at?: Date | null; note?: string }>;
 };

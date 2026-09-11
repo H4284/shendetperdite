@@ -30,7 +30,10 @@ export function OrderSummary({
     ? shippingCostFor(subtotal, shippingMethod, discount)
     : 0;
   const total = Math.max(0, subtotal - discountValue + shipping);
-  const remaining = freeShippingRemaining(subtotal);
+  const remaining = freeShippingRemaining(
+    subtotal,
+    shippingMethod?.freeFrom ?? Number.POSITIVE_INFINITY,
+  );
   const shippingLabel =
     shipping === 0 ? t("checkout.shippingFree") : formatEuroAmount(shipping);
 

@@ -6,6 +6,7 @@ import { Header } from "@/components/header/header";
 import { Providers } from "@/components/providers";
 import { SkipLink } from "@/components/skip-link";
 import { siteConfig } from "@/config/site";
+import { getStoreSettings } from "@/lib/settings/store";
 import "./globals.css";
 
 const instrumentSans = Instrument_Sans({
@@ -23,11 +24,12 @@ export const metadata: Metadata = {
   description: siteConfig.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getStoreSettings();
   return (
     <html
       lang="sq"
@@ -35,7 +37,7 @@ export default function RootLayout({
       className={instrumentSans.variable}
     >
       <body className="font-sans antialiased">
-        <Providers>
+        <Providers settings={settings}>
           <div className="flex min-h-dvh flex-col">
             <SkipLink />
             <Header />

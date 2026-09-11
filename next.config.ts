@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     "jose",
     "jwks-rsa",
     "resend",
+    "sharp",
   ],
   experimental: {
     optimizePackageImports: ["lucide-react"],
@@ -22,6 +23,16 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "firebasestorage.googleapis.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "shendetperdite-8d758.firebasestorage.app",
         pathname: "/**",
       },
     ],

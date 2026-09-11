@@ -4,7 +4,13 @@ export type AuthUser = {
   uid: string;
   email?: string;
   name?: string;
+  admin?: boolean;
+  role?: string;
 };
+
+export function isAdminUser(user: AuthUser | null | undefined) {
+  return Boolean(user && (user.admin === true || user.role === "admin"));
+}
 
 type AccessTokenCredential = {
   getAccessToken: () => Promise<{ access_token: string }>;
@@ -123,6 +129,8 @@ export async function verifySessionCookie(cookie: string): Promise<AuthUser> {
     uid,
     email: typeof payload.email === "string" ? payload.email : undefined,
     name: typeof payload.name === "string" ? payload.name : undefined,
+    admin: payload.admin === true,
+    role: typeof payload.role === "string" ? payload.role : undefined,
   };
 }
 

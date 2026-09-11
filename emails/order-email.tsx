@@ -21,6 +21,7 @@ export type OrderEmailProps = {
   shippingCost: number;
   total: number;
   audience: "customer" | "admin";
+  statusNote?: string;
 };
 
 export function OrderEmail({
@@ -31,6 +32,7 @@ export function OrderEmail({
   shippingCost,
   total,
   audience,
+  statusNote,
 }: OrderEmailProps) {
   const title =
     audience === "admin"
@@ -47,9 +49,11 @@ export function OrderEmail({
             {title}
           </Heading>
           <Text>
-            {audience === "admin"
-              ? "Një porosi e re u vendos në Shëndet Përditë."
-              : "Do të kontaktoheni për konfirmim. Pagesa mblidhet gjatë dorëzimit."}
+            {statusNote
+              ? statusNote
+              : audience === "admin"
+                ? "Një porosi e re u vendos në Shëndet Përditë."
+                : "Do të kontaktoheni për konfirmim. Pagesa mblidhet gjatë dorëzimit."}
           </Text>
           <Section>
             {items.map((item) => (

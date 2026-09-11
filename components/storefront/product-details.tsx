@@ -7,6 +7,7 @@ import { ProductGallery } from "@/components/storefront/product-gallery";
 import { Price } from "@/components/storefront/price";
 import { StockStatus } from "@/components/storefront/stock-badge";
 import { VariantSelector } from "@/components/storefront/variant-selector";
+import { useStoreSettings } from "@/components/store-settings-provider";
 import { siteConfig } from "@/config/site";
 import { formatPrice, formatUnitPrice, variantLabel } from "@/lib/format";
 import { t } from "@/lib/i18n/sq";
@@ -38,6 +39,7 @@ export function ProductDetails({
     findVariant(product, initialSku)?.sku ?? null,
   );
   const variant = findVariant(product, sku);
+  const { freeShippingFrom } = useStoreSettings();
   const [selected, setSelected] = useState<Record<string, string>>(
     variant?.optionValues ?? {},
   );
@@ -121,7 +123,7 @@ export function ProductDetails({
           <p className="font-semibold">{t("product.shippingTitle")}</p>
           <p className="mt-2">
             {t("product.freeShipping", {
-              amount: formatPrice(siteConfig.freeShippingFrom),
+              amount: formatPrice(freeShippingFrom),
             })}
           </p>
           <p className="mt-1 text-muted-foreground">{t("product.delivery")}</p>

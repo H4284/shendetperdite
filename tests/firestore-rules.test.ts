@@ -46,6 +46,14 @@ describe("firestore security rules", () => {
       code: "permission-denied",
     });
   });
+
+  it("does not allow an unauthenticated client to write home content", async () => {
+    await expect(
+      setDoc(doc(db, "content", "home"), { heroSlides: [] }),
+    ).rejects.toMatchObject({
+      code: "permission-denied",
+    });
+  });
 });
 
 afterAll(async () => {

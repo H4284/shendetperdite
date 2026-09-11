@@ -1,4 +1,4 @@
-import { siteConfig } from "@/config/site";
+import { useStoreSettings } from "@/components/store-settings-provider";
 import { formatEuroAmount } from "@/lib/cart/money";
 import {
   freeShippingRemaining,
@@ -14,7 +14,7 @@ export function CartShippingProgress({
   subtotal: number;
   discount: AppliedDiscount | null;
 }) {
-  const threshold = siteConfig.freeShippingFrom;
+  const threshold = useStoreSettings().freeShippingFrom;
   const remaining = freeShippingRemaining(subtotal, threshold);
   const earned = hasFreeShipping(subtotal, discount, threshold);
   const progress = Math.min(100, (subtotal / threshold) * 100);

@@ -89,3 +89,18 @@ export function getAdminAppInstance() {
 export function getAdminDb() {
   return getFirestore(getAdminApp());
 }
+
+export function getFirebaseProjectId() {
+  return projectId;
+}
+
+export async function getGoogleAccessToken() {
+  const credential = getAdminApp().options.credential as
+    | { getAccessToken?: () => Promise<{ access_token: string }> }
+    | undefined;
+  const token = await credential?.getAccessToken?.();
+  if (!token?.access_token) {
+    throw new Error("missing_access_token");
+  }
+  return token.access_token;
+}

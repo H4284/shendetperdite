@@ -1,28 +1,32 @@
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { getStoreSettings } from "@/lib/settings/store";
 import { t } from "@/lib/i18n/sq";
 
-export function Footer() {
+export async function Footer() {
   const year = new Date().getFullYear();
+  const settings = await getStoreSettings();
+  const company = settings.company;
+  const phoneHref = `tel:${company.phone.replace(/\s+/g, "")}`;
 
   return (
     <footer className="mt-auto border-t bg-background">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <Link href="/" className="text-sm font-semibold">
-            {siteConfig.name}
+            {company.name}
           </Link>
           <p className="mt-2 max-w-sm text-sm text-muted-foreground">
             {siteConfig.description}
           </p>
           <div className="mt-4 flex flex-col gap-1 text-sm text-muted-foreground">
-            <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
-              {siteConfig.email}
+            <a href={`mailto:${company.email}`} className="hover:text-foreground">
+              {company.email}
             </a>
-            <a href={siteConfig.phoneHref} className="hover:text-foreground">
-              {siteConfig.phone}
+            <a href={phoneHref} className="hover:text-foreground">
+              {company.phone}
             </a>
-            <p>{siteConfig.address}</p>
+            <p>{company.address}</p>
           </div>
         </div>
         <nav aria-label={t("footer.nav")} className="flex flex-col gap-2">
@@ -57,7 +61,7 @@ export function Footer() {
       </div>
       <div className="border-t">
         <p className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground">
-          {t("footer.copyright", { year, name: siteConfig.name })}
+          {t("footer.copyright", { year, name: company.name })}
         </p>
       </div>
     </footer>

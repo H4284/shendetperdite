@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import heroSlides from "@/content/hero-slides.json";
 import homeCategories from "@/content/home-categories.json";
 import storeBenefits from "@/content/store-benefits.json";
+import { BrandPromo } from "@/components/storefront/brand-promo";
 import { CategoryTiles } from "@/components/storefront/category-tiles";
 import { HeroSlider } from "@/components/storefront/hero-slider";
 import { NewsletterSignup } from "@/components/storefront/newsletter-signup";
@@ -15,6 +15,12 @@ import {
   getNewProducts,
   getSaleProducts,
 } from "@/lib/catalog";
+import {
+  activeBrandPromos,
+  activeHeroSlides,
+  getHomeBrands,
+  getHomeContent,
+} from "@/lib/content/home";
 import { t } from "@/lib/i18n/sq";
 import type { Brand, Product } from "@/types/catalog";
 
@@ -49,9 +55,13 @@ async function HomeCarousel({
   }
 }
 
-async function HomeBrands() {
+async function HomeBrands({ trustedBrandIds }: { trustedBrandIds: string[] }) {
   try {
-    const brands = await getBrands();
+    const brands = await getHomeBrands({
+      heroSlides: [],
+      brandPromos: [],
+      trustedBrandIds,
+    });
     return <TrustedBrands brands={brands} />;
   } catch (error) {
     console.error("Failed to load brands", error);
@@ -59,13 +69,18 @@ async function HomeBrands() {
   }
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const content = await getHomeContent();
+  const slides = activeHeroSlides(content);
+  const promos = activeBrandPromos(content);
+
   return (
     <>
-      <HeroSlider slides={heroSlides} />
+      <HeroSlider slides={slides} />
       <StoreBenefits items={storeBenefits} />
       <div className="mx-auto flex max-w-7xl flex-col gap-16 px-4 py-12">
         <CategoryTiles categories={homeCategories} />
+        {promos.length ? <BrandPromo blocks={promos} /> : null}
         <Suspense fallback={<ProductGridSkeleton count={4} />}>
           <HomeCarousel
             title={t("home.limitedOffers")}
@@ -88,7 +103,7 @@ export default function HomePage() {
           />
         </Suspense>
         <Suspense fallback={<ProductGridSkeleton count={5} />}>
-          <HomeBrands />
+          <HomeBrands trustedBrandIds={content.trustedBrandIds} />
         </Suspense>
         <NewsletterSignup />
       </div>

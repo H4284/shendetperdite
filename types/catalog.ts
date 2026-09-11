@@ -59,6 +59,7 @@ export const productDocumentSchema = z.object({
   isNew: z.boolean(),
   isBestSeller: z.boolean(),
   relatedProductIds: z.array(z.string().min(1)),
+  seo: seoSchema.optional(),
   searchTokens: z.array(z.string().min(1)),
   minPrice: z.number().nonnegative(),
   maxPrice: z.number().nonnegative(),
