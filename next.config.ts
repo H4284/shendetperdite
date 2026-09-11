@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     "@google-cloud/firestore",
     "jose",
     "jwks-rsa",
+    "resend",
   ],
   experimental: {
     optimizePackageImports: ["lucide-react"],

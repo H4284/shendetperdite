@@ -13,6 +13,7 @@ type CartState = {
   replaceItems: (items: CartItem[]) => void;
   setDiscount: (discount: AppliedDiscount | null, code?: string) => void;
   clearDiscount: () => void;
+  clearCart: () => void;
   setDrawerOpen: (open: boolean) => void;
   removeLocal: (variantId: string) => CartItem | null;
   restoreRemoved: () => void;
@@ -33,6 +34,13 @@ export const useCartStore = create<CartState>()(
           discountCode: discount ? (code ?? discount.code) : undefined,
         }),
       clearDiscount: () => set({ discount: null, discountCode: undefined }),
+      clearCart: () =>
+        set({
+          items: [],
+          discount: null,
+          discountCode: undefined,
+          lastRemoved: null,
+        }),
       setDrawerOpen: (open) => set({ drawerOpen: open }),
       removeLocal: (variantId) => {
         const item = get().items.find((entry) => entry.variantId === variantId) ?? null;

@@ -38,8 +38,34 @@ service cloud.firestore {
       allow read, write: if isAdmin();
     }
 
-    match /users/{userId}/cart/{docId} {
+    match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      match /cart/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /addresses/{id} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    match /shippingMethods/{id} {
+      allow read: if resource.data.isActive == true;
+      allow write: if isAdmin();
+    }
+
+    match /paymentMethods/{id} {
+      allow read: if resource.data.isActive == true;
+      allow write: if isAdmin();
+    }
+
+    match /orders/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    match /counters/{id} {
+      allow read, write: if isAdmin();
     }
   }
 }

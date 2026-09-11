@@ -34,7 +34,7 @@ export function cartTotal(
 
 export function freeShippingRemaining(
   subtotal: number,
-  threshold = siteConfig.freeShippingFrom,
+  threshold: number = siteConfig.freeShippingFrom,
 ) {
   return roundMoney(Math.max(0, threshold - subtotal));
 }
@@ -42,7 +42,7 @@ export function freeShippingRemaining(
 export function hasFreeShipping(
   subtotal: number,
   discount: AppliedDiscount | null | undefined,
-  threshold = siteConfig.freeShippingFrom,
+  threshold: number = siteConfig.freeShippingFrom,
 ) {
   return discount?.type === "free_shipping" || subtotal >= threshold;
 }
