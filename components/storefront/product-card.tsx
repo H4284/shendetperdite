@@ -90,6 +90,7 @@ export function ProductCard({
           <Price
             price={product.minPrice}
             compareAtPrice={product.compareAtPrice}
+            showVat
           />
         </div>
       </Link>

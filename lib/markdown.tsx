@@ -17,21 +17,35 @@ function renderInline(text: string, keyPrefix: string) {
 export function Markdown({
   content,
   className,
+  tone = "default",
 }: {
   content: string;
   className?: string;
+  tone?: "default" | "calm";
 }) {
   const blocks = content.trim().split(/\n{2,}/);
+  const calm = tone === "calm";
 
   return (
-    <div className={cn("space-y-4 text-muted-foreground", className)}>
+    <div
+      className={cn(
+        calm
+          ? "space-y-8 text-muted-foreground"
+          : "space-y-4 text-muted-foreground",
+        className,
+      )}
+    >
       {blocks.map((block, index) => {
         const line = block.trim();
         if (line.startsWith("### ")) {
           return (
             <h3
               key={index}
-              className="text-lg font-semibold text-foreground"
+              className={
+                calm
+                  ? "text-base font-semibold tracking-tight text-foreground md:text-lg"
+                  : "text-lg font-semibold text-foreground"
+              }
             >
               {line.slice(4)}
             </h3>
@@ -41,7 +55,11 @@ export function Markdown({
           return (
             <h2
               key={index}
-              className="text-xl font-semibold text-foreground"
+              className={
+                calm
+                  ? "pt-2 text-lg font-semibold tracking-tight text-foreground md:text-xl"
+                  : "text-xl font-semibold text-foreground"
+              }
             >
               {line.slice(3)}
             </h2>
@@ -51,7 +69,11 @@ export function Markdown({
           return (
             <h1
               key={index}
-              className="text-3xl font-semibold tracking-tight text-foreground"
+              className={
+                calm
+                  ? "text-4xl font-semibold tracking-tight text-foreground md:text-5xl"
+                  : "text-3xl font-semibold tracking-tight text-foreground"
+              }
             >
               {line.slice(2)}
             </h1>
@@ -60,14 +82,28 @@ export function Markdown({
         if (line.startsWith("- ")) {
           const items = line.split("\n").filter((item) => item.startsWith("- "));
           return (
-            <ul key={index} className="list-disc space-y-1 pl-5">
+            <ul
+              key={index}
+              className={
+                calm
+                  ? "list-disc space-y-2 pl-5 text-base leading-relaxed md:text-lg"
+                  : "list-disc space-y-1 pl-5"
+              }
+            >
               {items.map((item, itemIndex) => (
                 <li key={itemIndex}>{renderInline(item.slice(2), `${index}-${itemIndex}`)}</li>
               ))}
             </ul>
           );
         }
-        return <p key={index}>{renderInline(line.replace(/\n/g, " "), `${index}`)}</p>;
+        return (
+          <p
+            key={index}
+            className={calm ? "text-base leading-relaxed md:text-lg" : undefined}
+          >
+            {renderInline(line.replace(/\n/g, " "), `${index}`)}
+          </p>
+        );
       })}
     </div>
   );

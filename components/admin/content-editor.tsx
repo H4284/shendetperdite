@@ -33,13 +33,46 @@ export function ContentEditor({
       }}
     >
       <section className="space-y-3">
-        <h2 className="font-semibold">Hero</h2>
+        <div className="space-y-1">
+          <h2 className="font-semibold">Hero</h2>
+          <p className="text-sm text-muted-foreground">
+            Një CTA e qartë për slide: veprim i shkurtër (p.sh. «Shiko Ofertat», «Eksploro NOW Foods»).
+            Shmang fraza të gjata ose dy butona në të njëjtin slide.
+          </p>
+        </div>
         {content.heroSlides.map((slide, index) => (
-          <div key={slide.id} className="grid gap-2 rounded-2xl border p-3 md:grid-cols-2">
-            <Input value={slide.title} onChange={(e) => updateSlide(index, { title: e.target.value })} />
-            <Input value={slide.subtitle} onChange={(e) => updateSlide(index, { subtitle: e.target.value })} />
-            <Input value={slide.href} onChange={(e) => updateSlide(index, { href: e.target.value })} />
-            <Input value={slide.cta} onChange={(e) => updateSlide(index, { cta: e.target.value })} />
+          <div key={slide.id} className="grid gap-3 rounded-2xl border p-3 md:grid-cols-2">
+            <Field label="Titulli">
+              <Input
+                value={slide.title}
+                placeholder="p.sh. Vitamina për çdo ditë"
+                onChange={(e) => updateSlide(index, { title: e.target.value })}
+              />
+            </Field>
+            <Field label="Nëntitulli">
+              <Input
+                value={slide.subtitle}
+                placeholder="Një fjali mbështetëse"
+                onChange={(e) => updateSlide(index, { subtitle: e.target.value })}
+              />
+            </Field>
+            <Field label="Linku (href)" hint="Rruga e brendshme, p.sh. /offers ose /brands/now-foods">
+              <Input
+                value={slide.href}
+                placeholder="/offers"
+                onChange={(e) => updateSlide(index, { href: e.target.value })}
+              />
+            </Field>
+            <Field
+              label="Teksti i CTA"
+              hint="2–4 fjalë, një veprim. Shembull: Shiko Ofertat · Eksploro markën"
+            >
+              <Input
+                value={slide.cta}
+                placeholder="Shiko Ofertat"
+                onChange={(e) => updateSlide(index, { cta: e.target.value })}
+              />
+            </Field>
             <label className="flex items-center gap-2 text-sm">
               <Checkbox
                 checked={slide.active !== false}
@@ -52,12 +85,52 @@ export function ContentEditor({
         ))}
       </section>
       <section className="space-y-3">
-        <h2 className="font-semibold">Promo të markave</h2>
+        <div className="space-y-1">
+          <h2 className="font-semibold">Promo të markave</h2>
+          <p className="text-sm text-muted-foreground">
+            Një CTA për bllok: zakonisht «Shiko [Marka]». Linku duhet të çojë te faqja e markës ose kategorisë.
+          </p>
+        </div>
         {content.brandPromos.map((block, index) => (
-          <div key={block.id} className="grid gap-2 rounded-2xl border p-3 md:grid-cols-2">
-            <Input value={block.title} onChange={(e) => updatePromo(index, { title: e.target.value })} />
-            <Input value={block.body} onChange={(e) => updatePromo(index, { body: e.target.value })} />
-            <Input value={block.href} onChange={(e) => updatePromo(index, { href: e.target.value })} />
+          <div key={block.id} className="grid gap-3 rounded-2xl border p-3 md:grid-cols-2">
+            <Field label="Titulli">
+              <Input
+                value={block.title}
+                placeholder="p.sh. NOW Foods"
+                onChange={(e) => updatePromo(index, { title: e.target.value })}
+              />
+            </Field>
+            <Field label="Teksti">
+              <Input
+                value={block.body}
+                placeholder="Një fjali e shkurtër për markën"
+                onChange={(e) => updatePromo(index, { body: e.target.value })}
+              />
+            </Field>
+            <Field label="Linku (href)" hint="Zakonisht /brands/…">
+              <Input
+                value={block.href}
+                placeholder="/brands/now-foods"
+                onChange={(e) => updatePromo(index, { href: e.target.value })}
+              />
+            </Field>
+            <Field
+              label="Teksti i CTA"
+              hint="2–4 fjalë. Shembull: Shiko NOW Foods"
+            >
+              <Input
+                value={block.cta}
+                placeholder="Shiko NOW Foods"
+                onChange={(e) => updatePromo(index, { cta: e.target.value })}
+              />
+            </Field>
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox
+                checked={block.active !== false}
+                onCheckedChange={(value) => updatePromo(index, { active: value === true })}
+              />
+              Aktiv
+            </label>
             <ImageUploadButton folder="content/promo" onUploaded={(url) => updatePromo(index, { image: url })} />
           </div>
         ))}
@@ -94,4 +167,24 @@ export function ContentEditor({
       brandPromos: current.brandPromos.map((block, i) => (i === index ? { ...block, ...patch } : block)),
     }));
   }
+}
+
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="block space-y-1.5">
+      <span className="text-sm font-medium">{label}</span>
+      {hint ? (
+        <p className="text-xs leading-relaxed text-muted-foreground">{hint}</p>
+      ) : null}
+      {children}
+    </div>
+  );
 }

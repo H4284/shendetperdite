@@ -120,6 +120,7 @@ export function ProductDetails({
             compareAtPrice={compareAt}
             className="text-xl"
             showDiscountBadge
+            showVat
           />
         ) : null}
         {product.unit ? (
@@ -128,6 +129,11 @@ export function ProductDetails({
           </p>
         ) : null}
         <StockStatus inStock={(variant?.stockQty ?? 0) > 0} />
+        {variant?.sku ? (
+          <p className="text-xs text-muted-foreground">
+            {t("product.sku", { sku: variant.sku })}
+          </p>
+        ) : null}
         <VariantSelector
           options={product.options}
           variants={product.variants}
@@ -149,18 +155,28 @@ export function ProductDetails({
             className="h-11 w-full sm:w-auto"
           />
         </div>
-        <ul className="space-y-1.5 text-sm text-muted-foreground">
-          <li>{t("product.trustDelivery")}</li>
-          <li>
-            <Link
-              href="/returns"
-              className="underline-offset-4 hover:text-foreground hover:underline"
-            >
-              {t("product.trustReturns")}
-            </Link>
-          </li>
-          <li>{t("product.trustPayment")}</li>
-        </ul>
+        <aside className="rounded-2xl border p-4 text-sm">
+          <p className="font-semibold tracking-tight">{t("product.trustTitle")}</p>
+          <ul className="mt-3 space-y-2 text-muted-foreground">
+            <li className="flex gap-2">
+              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+              <span>{t("product.trustDelivery")}</span>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+              <Link
+                href="/returns"
+                className="underline-offset-4 hover:text-foreground hover:underline"
+              >
+                {t("product.trustReturns")}
+              </Link>
+            </li>
+            <li className="flex gap-2">
+              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
+              <span>{t("product.trustPayment")}</span>
+            </li>
+          </ul>
+        </aside>
         <aside className="rounded-2xl border bg-primary/5 p-4 text-sm">
           <p className="font-semibold">{t("product.shippingTitle")}</p>
           <p className="mt-2">
