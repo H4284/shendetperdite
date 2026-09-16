@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { CartStepper } from "@/components/cart/cart-stepper";
 import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
 import { ProductGallery } from "@/components/storefront/product-gallery";
 import { Price } from "@/components/storefront/price";
@@ -46,6 +47,8 @@ export function ProductDetails({
   const [selected, setSelected] = useState<Record<string, string>>(
     variant?.optionValues ?? {},
   );
+  const [qty, setQty] = useState(1);
+  const maxQty = Math.max(1, variant?.stockQty ?? 1);
 
   const titleLabel = useMemo(() => {
     if (!variant) return product.name;
@@ -56,6 +59,10 @@ export function ProductDetails({
   useEffect(() => {
     document.title = `${titleLabel} | ${siteConfig.name}`;
   }, [titleLabel]);
+
+  useEffect(() => {
+    setQty(1);
+  }, [variant?.id]);
 
   function setVariantSku(nextSku: string, nextSelected: Record<string, string>) {
     setSku(nextSku);
@@ -74,6 +81,11 @@ export function ProductDetails({
     );
     if (!match) return;
     setVariantSku(match.sku, next);
+  }
+
+  function onQtyChange(next: number) {
+    if (!Number.isFinite(next)) return;
+    setQty(Math.min(maxQty, Math.max(1, Math.floor(next))));
   }
 
   const galleryImages = product.images.slice().sort((a, b) => a.order - b.order);
@@ -122,10 +134,17 @@ export function ProductDetails({
           selected={selected}
           onSelect={onSelect}
         />
-        <div ref={atcRef}>
+        <div ref={atcRef} className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <CartStepper
+            value={qty}
+            max={maxQty}
+            disabled={atcDisabled}
+            onChange={onQtyChange}
+          />
           <AddToCartButton
             productId={product.id}
             variantId={variant?.id}
+            qty={qty}
             disabled={atcDisabled}
             className="h-11 w-full sm:w-auto"
           />
@@ -158,6 +177,7 @@ export function ProductDetails({
           compareAtPrice={compareAt}
           productId={product.id}
           variantId={variant.id}
+          qty={qty}
           disabled={atcDisabled}
           observeRef={atcRef}
         />

@@ -12,6 +12,12 @@ const sq = {
     themeToggle: "Ndrysho temën",
     themeLight: "Tema e çelët",
     themeDark: "Tema e errët",
+    contact: "Na kontaktoni",
+    phone: "Telefon",
+    whatsapp: "WhatsApp",
+    viber: "Viber",
+    openHelp: "Hap ndihmën e kontaktit",
+    closeHelp: "Mbyll ndihmën e kontaktit",
   },
   auth: {
     login: "Hyr",
@@ -132,6 +138,9 @@ const sq = {
   footer: {
     nav: "Fundi i faqes",
     copyright: "© {year} {name}. Të gjitha të drejtat e rezervuara.",
+    shipping: "Transport 1–3 ditë",
+    paymentCod: "Para në dorëzim",
+    returns: "Kthime të lehta",
   },
   offers: {
     nav: "Ofertat",
@@ -146,6 +155,7 @@ const sq = {
     subtitle: "Health products for daily wellness.",
     limitedOffers: "Oferta që nuk duhen humbur",
     limitedOffersSubtitle: "Kursime me kohë të kufizuar për produkte të zgjedhura",
+    limitedOffersEyebrow: "Ofertat",
     bestSellers: "Të pëlqyera nga klientët tanë",
     bestSellersSubtitle: "Produktet që komuniteti ynë blen më shumë",
     newArrivals: "Produkte të reja",

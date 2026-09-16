@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Banknote, RotateCcw, Truck } from "lucide-react";
 import { ObfuscatedEmail } from "@/components/footer/obfuscated-email";
 import { siteConfig } from "@/config/site";
 import { getStoreSettings } from "@/lib/settings/store";
@@ -9,6 +10,12 @@ export async function Footer() {
   const settings = await getStoreSettings();
   const company = settings.company;
   const phoneHref = `tel:${company.phone.replace(/\s+/g, "")}`;
+
+  const trustItems = [
+    { icon: Truck, label: t("footer.shipping") },
+    { icon: Banknote, label: t("footer.paymentCod") },
+    { icon: RotateCcw, label: t("footer.returns"), href: "/returns" as const },
+  ];
 
   return (
     <footer className="mt-auto border-t bg-background">
@@ -59,9 +66,34 @@ export async function Footer() {
         </div>
       </div>
       <div className="border-t">
-        <p className="mx-auto max-w-7xl px-4 py-4 text-xs text-muted-foreground">
-          {t("footer.copyright", { year, name: company.name })}
-        </p>
+        <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+          <ul className="flex flex-wrap gap-2">
+            {trustItems.map((item) => {
+              const Icon = item.icon;
+              const className =
+                "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs text-muted-foreground";
+              if ("href" in item && item.href) {
+                return (
+                  <li key={item.label}>
+                    <Link href={item.href} className={`${className} hover:text-foreground`}>
+                      <Icon className="size-3.5" aria-hidden />
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              }
+              return (
+                <li key={item.label} className={className}>
+                  <Icon className="size-3.5" aria-hidden />
+                  {item.label}
+                </li>
+              );
+            })}
+          </ul>
+          <p className="text-xs text-muted-foreground">
+            {t("footer.copyright", { year, name: company.name })}
+          </p>
+        </div>
       </div>
     </footer>
   );

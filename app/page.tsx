@@ -23,6 +23,7 @@ import {
   getHomeContent,
 } from "@/lib/content/home";
 import { getStoreSettings } from "@/lib/settings/store";
+import { formatPrice } from "@/lib/format";
 import { t } from "@/lib/i18n/sq";
 import type { Brand, Product } from "@/types/catalog";
 
@@ -38,12 +39,16 @@ async function HomeCarousel({
   loader,
   viewAllHref,
   viewAllLabel,
+  eyebrow,
+  variant,
 }: {
   title: string;
   subtitle?: string;
   loader: () => Promise<Product[]>;
   viewAllHref?: string;
   viewAllLabel?: string;
+  eyebrow?: string;
+  variant?: "default" | "campaign";
 }) {
   try {
     const [products, brands] = await Promise.all([loader(), getBrands()]);
@@ -55,6 +60,8 @@ async function HomeCarousel({
         brandNames={brandNames(brands)}
         viewAllHref={viewAllHref}
         viewAllLabel={viewAllLabel}
+        eyebrow={eyebrow}
+        variant={variant}
       />
     );
   } catch (error) {
@@ -84,11 +91,22 @@ export default async function HomePage() {
   ]);
   const slides = activeHeroSlides(content);
   const promos = activeBrandPromos(content);
+  const benefits = storeBenefits.map((item) =>
+    item.id === "shipping"
+      ? {
+          ...item,
+          title: item.title.replace(
+            "{amount}",
+            formatPrice(settings.freeShippingFrom),
+          ),
+        }
+      : item,
+  );
 
   return (
     <>
       <HeroSlider slides={slides} />
-      <StoreBenefits items={storeBenefits} />
+      <StoreBenefits items={benefits} />
       <div className="mx-auto max-w-7xl px-4 pt-10">
         <FreeShippingBanner amount={settings.freeShippingFrom} />
       </div>
@@ -102,6 +120,8 @@ export default async function HomePage() {
             loader={getSaleProducts}
             viewAllHref="/offers"
             viewAllLabel={t("offers.viewAll")}
+            eyebrow={t("home.limitedOffersEyebrow")}
+            variant="campaign"
           />
         </Suspense>
         <Suspense fallback={<ProductGridSkeleton count={4} />}>

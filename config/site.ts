@@ -16,6 +16,8 @@ export const siteConfig = {
   email: "info@shendetperdite.com",
   phone: "+383 49 985 500",
   phoneHref: "tel:+38349985500",
+  whatsappHref: "https://wa.me/38349985500",
+  viberHref: "viber://chat?number=%2B38349985500",
   address: "Sokol Sopi 285, Prishtine",
   nav: [
     {

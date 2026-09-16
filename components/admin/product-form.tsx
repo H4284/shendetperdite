@@ -199,15 +199,51 @@ export function ProductForm({
         </div>
       </Field>
 
-      <Field label="Përshkrimi i shkurtër">
+      <Field
+        label="Përshkrimi i shkurtër"
+        hint="1–2 fjali për kartelën e produktit dhe listimet (jo markdown)."
+      >
         <Textarea value={shortDescription} onChange={(event) => setShortDescription(event.target.value)} />
       </Field>
-      <Field label="Përshkrimi (markdown)">
-        <Textarea
-          className="min-h-40 font-mono text-sm"
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-        />
+      <Field
+        label="Përshkrimi (markdown)"
+        hint="Strukturo tekstin me tituj: Për kë, Si përdoret, Përfitimet. Mbaj secilin seksion të shkurtër dhe të qartë."
+      >
+        <div className="space-y-2">
+          <Textarea
+            className="min-h-40 font-mono text-sm"
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const template = [
+                "## Për kë",
+                "",
+                "Për persona që…",
+                "",
+                "## Si përdoret",
+                "",
+                "Merrni … në ditë, sipas udhëzimit në paketim.",
+                "",
+                "## Përfitimet",
+                "",
+                "- …",
+                "- …",
+                "- …",
+                "",
+              ].join("\n");
+              setDescription((current) =>
+                current.trim() ? current : template,
+              );
+            }}
+          >
+            Shto shabllonin e përshkrimit
+          </Button>
+        </div>
       </Field>
 
       <section className="space-y-3">
@@ -453,11 +489,22 @@ function fromVariant(variant: Variant): VariantDraft {
   };
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <label className="block space-y-1.5">
+    <div className="block space-y-1.5">
       <span className="text-sm font-medium">{label}</span>
+      {hint ? (
+        <p className="text-xs leading-relaxed text-muted-foreground">{hint}</p>
+      ) : null}
       {children}
-    </label>
+    </div>
   );
 }

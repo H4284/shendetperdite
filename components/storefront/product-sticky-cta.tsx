@@ -9,6 +9,7 @@ export function ProductStickyCta({
   compareAtPrice,
   productId,
   variantId,
+  qty = 1,
   disabled,
   observeRef,
 }: {
@@ -16,6 +17,7 @@ export function ProductStickyCta({
   compareAtPrice?: number | null;
   productId: string;
   variantId: string | null | undefined;
+  qty?: number;
   disabled?: boolean;
   /** Element that, when visible, hides the sticky bar (usually the main ATC). */
   observeRef: React.RefObject<HTMLElement | null>;
@@ -54,6 +56,7 @@ export function ProductStickyCta({
         <AddToCartButton
           productId={productId}
           variantId={variantId}
+          qty={qty}
           disabled={disabled}
           className="h-11 shrink-0 px-5"
         />

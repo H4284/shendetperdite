@@ -9,6 +9,7 @@ import { Header } from "@/components/header/header";
 import { Providers } from "@/components/providers";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/seo/json-ld";
 import { SkipLink } from "@/components/skip-link";
+import { ContactFab } from "@/components/storefront/contact-fab";
 import { siteConfig } from "@/config/site";
 import { absoluteUrl } from "@/lib/seo/site-url";
 import { getStoreSettings } from "@/lib/settings/store";
@@ -69,6 +70,7 @@ export default async function RootLayout({
             </main>
             <Footer />
             <CookieConsent />
+            <ContactFab />
           </div>
           <AnalyticsScripts />
           <SentryInit />

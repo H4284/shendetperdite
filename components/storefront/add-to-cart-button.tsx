@@ -9,12 +9,14 @@ import { t } from "@/lib/i18n/sq";
 export function AddToCartButton({
   productId,
   variantId,
+  qty = 1,
   disabled,
   className,
   size = "lg",
 }: {
   productId: string;
   variantId: string | null | undefined;
+  qty?: number;
   disabled?: boolean;
   className?: string;
   size?: "sm" | "lg";
@@ -28,7 +30,11 @@ export function AddToCartButton({
     if (!variantId || busy) return;
     setBusy(true);
     try {
-      await addToCart({ productId, variantId, qty: 1 });
+      await addToCart({
+        productId,
+        variantId,
+        qty: Math.max(1, Math.floor(qty) || 1),
+      });
     } catch {
       toast.error(t("error.body"));
     } finally {

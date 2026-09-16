@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import { HeaderContact } from "@/components/header/header-contact";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -35,6 +36,7 @@ export function MobileNav() {
         <SheetHeader>
           <SheetTitle>{siteConfig.name}</SheetTitle>
         </SheetHeader>
+        <HeaderContact variant="sheet" onNavigate={() => setOpen(false)} />
         <nav className="overflow-y-auto px-2 pb-6" aria-label={t("header.primaryNav")}>
           <Link
             href={siteConfig.offers.href}

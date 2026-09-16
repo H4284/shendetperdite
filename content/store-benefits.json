@@ -1,22 +1,22 @@
 [
   {
     "id": "shipping",
-    "title": "Transport falas",
-    "body": "Porosi mbi 50 €"
+    "title": "Transport falas mbi {amount}",
+    "body": "Dorëzim në Kosovë brenda 1–3 ditëve të punës"
   },
   {
     "id": "quality",
-    "title": "Cilësi e garantuar",
-    "body": "Produkte të certifikuara"
+    "title": "Marke të besuara",
+    "body": "Produkte me origjinë të qartë dhe cilësi të kontrolluar"
   },
   {
     "id": "natural",
-    "title": "Përbërës natyralë",
-    "body": "Formula të pastra"
+    "title": "Formula të pastra",
+    "body": "Përbërës të përzgjedhur për përdorim të përditshëm"
   },
   {
     "id": "curated",
-    "title": "Zgjedhje profesionale",
-    "body": "Përzgjedhje e kuruar"
+    "title": "Zgjedhje e kuruar",
+    "body": "Vetëm produkte që i rekomandojmë me besim klientëve tanë"
   }
 ]

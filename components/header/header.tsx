@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import { t } from "@/lib/i18n/sq";
 import { AccountMenu } from "@/components/header/account-menu";
 import { CartButton } from "@/components/header/cart-button";
+import { HeaderContact } from "@/components/header/header-contact";
 import { Logo } from "@/components/header/logo";
 import { MegaMenu } from "@/components/header/mega-menu";
 import { SearchCommand } from "@/components/header/search-command";
@@ -14,6 +15,7 @@ const MobileNav = dynamic(() =>
 export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-md">
+      <HeaderContact />
       <div className="mx-auto flex h-[4.25rem] max-w-7xl items-center gap-2 px-4 md:gap-6">
         <MobileNav />
         <Logo />
