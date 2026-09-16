@@ -36,6 +36,13 @@ export function MobileNav() {
           <SheetTitle>{siteConfig.name}</SheetTitle>
         </SheetHeader>
         <nav className="overflow-y-auto px-2 pb-6" aria-label={t("header.primaryNav")}>
+          <Link
+            href={siteConfig.offers.href}
+            onClick={() => setOpen(false)}
+            className="mb-4 block rounded-md px-3 py-2 text-sm font-semibold text-primary hover:bg-muted"
+          >
+            {t("offers.nav")}
+          </Link>
           {siteConfig.nav.map((item) => (
             <div key={item.slug} className="mb-4">
               {item.hasLanding ? (

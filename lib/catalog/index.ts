@@ -9,6 +9,7 @@ export {
   getRelatedProducts,
   getSaleProducts,
   listProducts,
+  listSaleProducts,
   revalidateCatalog,
   searchProducts,
 } from "@/lib/catalog/cache";
@@ -27,6 +28,7 @@ export {
   fetchProducts,
   fetchRelatedProducts,
   fetchSaleProducts,
+  fetchSaleProductsPage,
   fetchSearchProducts,
   recomputeProductAggregates,
 } from "@/lib/catalog/queries";

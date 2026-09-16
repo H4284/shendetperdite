@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { AddToCartButton } from "@/components/storefront/add-to-cart-button";
 import { ProductGallery } from "@/components/storefront/product-gallery";
 import { Price } from "@/components/storefront/price";
+import { ProductStickyCta } from "@/components/storefront/product-sticky-cta";
 import { StockStatus } from "@/components/storefront/stock-badge";
 import { VariantSelector } from "@/components/storefront/variant-selector";
 import { useStoreSettings } from "@/components/store-settings-provider";
@@ -35,6 +37,7 @@ export function ProductDetails({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const atcRef = useRef<HTMLDivElement>(null);
   const [sku, setSku] = useState(
     findVariant(product, initialSku)?.sku ?? null,
   );
@@ -82,8 +85,13 @@ export function ProductDetails({
     });
   }
 
+  const compareAt = variant
+    ? (variant.compareAtPrice ?? product.compareAtPrice)
+    : null;
+  const atcDisabled = !variant || variant.stockQty <= 0;
+
   return (
-    <div className="grid gap-8 lg:grid-cols-2">
+    <div className="grid gap-8 pb-24 md:pb-0 lg:grid-cols-2">
       <ProductGallery
         images={galleryImages}
         selectedUrl={variant?.image}
@@ -97,8 +105,9 @@ export function ProductDetails({
         {variant ? (
           <Price
             price={variant.price}
-            compareAtPrice={variant.compareAtPrice ?? product.compareAtPrice}
+            compareAtPrice={compareAt}
             className="text-xl"
+            showDiscountBadge
           />
         ) : null}
         {product.unit ? (
@@ -113,12 +122,26 @@ export function ProductDetails({
           selected={selected}
           onSelect={onSelect}
         />
-        <AddToCartButton
-          productId={product.id}
-          variantId={variant?.id}
-          disabled={!variant || variant.stockQty <= 0}
-          className="h-11 w-full sm:w-auto"
-        />
+        <div ref={atcRef}>
+          <AddToCartButton
+            productId={product.id}
+            variantId={variant?.id}
+            disabled={atcDisabled}
+            className="h-11 w-full sm:w-auto"
+          />
+        </div>
+        <ul className="space-y-1.5 text-sm text-muted-foreground">
+          <li>{t("product.trustDelivery")}</li>
+          <li>
+            <Link
+              href="/returns"
+              className="underline-offset-4 hover:text-foreground hover:underline"
+            >
+              {t("product.trustReturns")}
+            </Link>
+          </li>
+          <li>{t("product.trustPayment")}</li>
+        </ul>
         <aside className="rounded-2xl border bg-primary/5 p-4 text-sm">
           <p className="font-semibold">{t("product.shippingTitle")}</p>
           <p className="mt-2">
@@ -129,6 +152,16 @@ export function ProductDetails({
           <p className="mt-1 text-muted-foreground">{t("product.delivery")}</p>
         </aside>
       </div>
+      {variant ? (
+        <ProductStickyCta
+          price={variant.price}
+          compareAtPrice={compareAt}
+          productId={product.id}
+          variantId={variant.id}
+          disabled={atcDisabled}
+          observeRef={atcRef}
+        />
+      ) : null}
     </div>
   );
 }

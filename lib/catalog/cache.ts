@@ -10,6 +10,7 @@ import {
   fetchProducts,
   fetchRelatedProducts,
   fetchSaleProducts,
+  fetchSaleProductsPage,
   fetchSearchProducts,
 } from "@/lib/catalog/queries";
 import {
@@ -131,4 +132,19 @@ export async function getSaleProducts() {
     tags: [PRODUCTS_TAG],
   })();
   return products.map(applyLiveProductMedia);
+}
+
+export async function listSaleProducts(input: { page?: number; pageSize?: number } = {}) {
+  const page = input.page ?? 1;
+  const pageSize = input.pageSize ?? 12;
+  const listing = await unstable_cache(
+    () => fetchSaleProductsPage({ page, pageSize }),
+    [CACHE_VERSION, "catalog-sale-list", String(page), String(pageSize)],
+    { tags: [PRODUCTS_TAG] },
+  )();
+
+  return {
+    ...listing,
+    items: listing.items.map(applyLiveProductMedia),
+  };
 }

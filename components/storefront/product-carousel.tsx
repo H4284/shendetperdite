@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   Carousel,
   CarouselContent,
@@ -13,11 +14,15 @@ export function ProductCarousel({
   subtitle,
   products,
   brandNames,
+  viewAllHref,
+  viewAllLabel,
 }: {
   title: string;
   subtitle?: string;
   products: Product[];
   brandNames: Record<string, string>;
+  viewAllHref?: string;
+  viewAllLabel?: string;
 }) {
   if (products.length === 0) return null;
 
@@ -29,6 +34,14 @@ export function ProductCarousel({
             <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
             {subtitle ? (
               <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+            ) : null}
+            {viewAllHref && viewAllLabel ? (
+              <Link
+                href={viewAllHref}
+                className="mt-2 inline-block text-sm font-medium text-primary hover:underline"
+              >
+                {viewAllLabel}
+              </Link>
             ) : null}
           </div>
           <div className="flex items-center gap-2">

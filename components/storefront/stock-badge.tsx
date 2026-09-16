@@ -5,7 +5,10 @@ export function StockBadge({ inStock }: { inStock: boolean }) {
   if (inStock) return null;
 
   return (
-    <Badge variant="destructive" className="pointer-events-none">
+    <Badge
+      variant="destructive"
+      className="pointer-events-none px-2.5 py-1 text-[0.7rem] font-semibold tracking-wide uppercase shadow-sm"
+    >
       {t("catalog.outOfStock")}
     </Badge>
   );

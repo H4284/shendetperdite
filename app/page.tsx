@@ -3,6 +3,7 @@ import homeCategories from "@/content/home-categories.json";
 import storeBenefits from "@/content/store-benefits.json";
 import { BrandPromo } from "@/components/storefront/brand-promo";
 import { CategoryTiles } from "@/components/storefront/category-tiles";
+import { FreeShippingBanner } from "@/components/storefront/free-shipping-banner";
 import { HeroSlider } from "@/components/storefront/hero-slider";
 import { NewsletterSignup } from "@/components/storefront/newsletter-signup";
 import { ProductCarousel } from "@/components/storefront/product-carousel";
@@ -21,6 +22,7 @@ import {
   getHomeBrands,
   getHomeContent,
 } from "@/lib/content/home";
+import { getStoreSettings } from "@/lib/settings/store";
 import { t } from "@/lib/i18n/sq";
 import type { Brand, Product } from "@/types/catalog";
 
@@ -34,10 +36,14 @@ async function HomeCarousel({
   title,
   subtitle,
   loader,
+  viewAllHref,
+  viewAllLabel,
 }: {
   title: string;
   subtitle?: string;
   loader: () => Promise<Product[]>;
+  viewAllHref?: string;
+  viewAllLabel?: string;
 }) {
   try {
     const [products, brands] = await Promise.all([loader(), getBrands()]);
@@ -47,6 +53,8 @@ async function HomeCarousel({
         subtitle={subtitle}
         products={products}
         brandNames={brandNames(brands)}
+        viewAllHref={viewAllHref}
+        viewAllLabel={viewAllLabel}
       />
     );
   } catch (error) {
@@ -70,7 +78,10 @@ async function HomeBrands({ trustedBrandIds }: { trustedBrandIds: string[] }) {
 }
 
 export default async function HomePage() {
-  const content = await getHomeContent();
+  const [content, settings] = await Promise.all([
+    getHomeContent(),
+    getStoreSettings(),
+  ]);
   const slides = activeHeroSlides(content);
   const promos = activeBrandPromos(content);
 
@@ -78,6 +89,9 @@ export default async function HomePage() {
     <>
       <HeroSlider slides={slides} />
       <StoreBenefits items={storeBenefits} />
+      <div className="mx-auto max-w-7xl px-4 pt-10">
+        <FreeShippingBanner amount={settings.freeShippingFrom} />
+      </div>
       <div className="mx-auto flex max-w-7xl flex-col gap-16 px-4 py-12">
         <CategoryTiles categories={homeCategories} />
         {promos.length ? <BrandPromo blocks={promos} /> : null}
@@ -86,6 +100,8 @@ export default async function HomePage() {
             title={t("home.limitedOffers")}
             subtitle={t("home.limitedOffersSubtitle")}
             loader={getSaleProducts}
+            viewAllHref="/offers"
+            viewAllLabel={t("offers.viewAll")}
           />
         </Suspense>
         <Suspense fallback={<ProductGridSkeleton count={4} />}>

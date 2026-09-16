@@ -82,6 +82,10 @@ export const siteConfig = {
     { name: "Termet dhe Kushtet", href: "/terms" },
   ],
   freeShippingFrom: 50,
+  offers: {
+    href: "/offers",
+    label: "Ofertat",
+  },
   social: {
     instagram: "https://www.instagram.com/shendetperdite",
     facebook: "https://facebook.com/shendetperdite",

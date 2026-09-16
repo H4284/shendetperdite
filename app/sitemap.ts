@@ -10,6 +10,7 @@ export const revalidate = 3600;
 
 const staticPaths = [
   "/",
+  "/offers",
   "/about",
   "/shipping",
   "/returns",

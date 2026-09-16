@@ -352,31 +352,36 @@ export async function fetchNewProducts(): Promise<Product[]> {
   }
 }
 
-export async function fetchSaleProducts(): Promise<Product[]> {
+function isSaleProduct(product: Product) {
+  return product.compareAtPrice != null && product.compareAtPrice > product.minPrice;
+}
+
+async function fetchAllSaleProducts(): Promise<Product[]> {
   try {
     const snapshot = await db()
       .collection("products")
       .where("status", "==", "active")
       .orderBy("createdAt", "desc")
-      .limit(48)
       .get();
 
-    return snapshot.docs
-      .map((doc) => parseProduct(doc.id, doc.data()))
-      .filter(
-        (product) =>
-          product.compareAtPrice != null && product.compareAtPrice > product.minPrice,
-      )
-      .slice(0, 12);
+    return snapshot.docs.map((doc) => parseProduct(doc.id, doc.data())).filter(isSaleProduct);
   } catch (error) {
     if (!isIndexError(error)) throw error;
-    return sortProducts(await fetchActiveProducts(), "newest")
-      .filter(
-        (product) =>
-          product.compareAtPrice != null && product.compareAtPrice > product.minPrice,
-      )
-      .slice(0, 12);
+    return sortProducts(await fetchActiveProducts(), "newest").filter(isSaleProduct);
   }
+}
+
+export async function fetchSaleProducts(): Promise<Product[]> {
+  return (await fetchAllSaleProducts()).slice(0, 12);
+}
+
+export async function fetchSaleProductsPage(input: {
+  page?: number;
+  pageSize?: number;
+} = {}): Promise<ListProductsResult> {
+  const page = Math.max(1, input.page ?? 1);
+  const pageSize = Math.min(48, Math.max(1, input.pageSize ?? DEFAULT_PAGE_SIZE));
+  return paginateProducts(await fetchAllSaleProducts(), page, pageSize);
 }
 
 export async function fetchActiveCategorySlugs(): Promise<string[]> {

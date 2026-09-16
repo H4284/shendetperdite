@@ -40,6 +40,14 @@ export function MegaMenu() {
           </div>
         </li>
       ))}
+      <li>
+        <Link
+          href={siteConfig.offers.href}
+          className="flex h-11 items-center px-3 text-sm font-medium text-primary transition-colors hover:text-primary/80"
+        >
+          {t("offers.nav")}
+        </Link>
+      </li>
     </ul>
   );
 }
